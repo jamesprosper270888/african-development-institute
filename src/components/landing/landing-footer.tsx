@@ -45,7 +45,22 @@ export function LandingFooter() {
             &copy; {new Date().getFullYear()} African Development Institute. All
             rights reserved.
           </p>
-          <p className="mt-1">A Prospect Connect Media initiative.</p>
+          <div className="mt-2 flex items-center justify-center gap-3">
+            <Link
+              href="/terms"
+              className="transition-colors hover:text-white/60"
+            >
+              Terms
+            </Link>
+            <span>|</span>
+            <Link
+              href="/privacy"
+              className="transition-colors hover:text-white/60"
+            >
+              Privacy
+            </Link>
+          </div>
+          <p className="mt-2">A D Imperative Ltd. Company No. 12467395.</p>
         </div>
       </div>
     </footer>
