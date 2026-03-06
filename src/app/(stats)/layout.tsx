@@ -29,6 +29,9 @@ export default async function StatsLayout({
             </Link>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <Link href="/changelog" className="hover:text-foreground">
+              Changelog
+            </Link>
             <Link href="/app/dashboard" className="hover:text-foreground">
               Dashboard
             </Link>

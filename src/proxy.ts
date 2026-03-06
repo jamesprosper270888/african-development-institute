@@ -21,7 +21,7 @@ function isStaticAsset(pathname: string): boolean {
   );
 }
 
-export function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isStaticAsset(pathname)) {
@@ -64,7 +64,6 @@ export function middleware(request: NextRequest) {
   // App routes — require session
   if (context === "app") {
     const sessionToken =
-      request.cookies.get("adi.session_token")?.value ||
       request.cookies.get("adi.session_token")?.value;
 
     if (!sessionToken) {
@@ -90,7 +89,3 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
-};

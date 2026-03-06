@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { members } from "@/lib/schema";
+import { members, user } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { getAuthSession } from "@/lib/api-auth";
 
@@ -56,9 +56,10 @@ export async function PATCH(request: Request) {
 
   // Also update the auth user name
   if (name) {
-    await db.execute(
-      `UPDATE "user" SET name = '${name.replace(/'/g, "''")}', updated_at = now() WHERE id = '${session.user.id}'`
-    );
+    await db
+      .update(user)
+      .set({ name, updatedAt: new Date() })
+      .where(eq(user.id, session.user.id));
   }
 
   return NextResponse.json({ success: true });
