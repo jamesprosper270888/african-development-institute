@@ -101,7 +101,7 @@ export function EnquiryForm({
       <Button
         type="submit"
         disabled={pending}
-        className="w-full bg-adi-red text-white hover:bg-adi-red/90"
+        className="h-12 w-full bg-adi-green text-sm font-semibold text-white hover:bg-adi-green/90"
       >
         {pending ? "Sending..." : "Send Enquiry"}
       </Button>

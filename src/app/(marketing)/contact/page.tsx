@@ -35,7 +35,7 @@ export default function ContactPage() {
               </p>
               <a
                 href="mailto:hello@africandevelopmentinstitute.org"
-                className="mt-1 inline-block font-medium text-adi-red transition-colors hover:text-adi-red/80"
+                className="mt-1 inline-block font-medium text-adi-green transition-colors hover:text-adi-green/80"
               >
                 hello@africandevelopmentinstitute.org
               </a>
