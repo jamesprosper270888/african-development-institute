@@ -11,7 +11,7 @@ const footerLinks = [
 
 export function LandingFooter() {
   return (
-    <footer className="border-t border-white/10 bg-adi-black py-16 text-white">
+    <footer className="bg-adi-black py-12 text-white">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
           <div>
@@ -40,7 +40,7 @@ export function LandingFooter() {
           </nav>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-8 text-center text-xs text-white/40">
+        <div className="mt-12 pt-8 text-center text-xs text-white/40">
           <p>
             &copy; {new Date().getFullYear()} African Development Institute. All
             rights reserved.

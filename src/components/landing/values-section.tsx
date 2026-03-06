@@ -26,7 +26,7 @@ const values = [
 
 export function ValuesSection() {
   return (
-    <section className="bg-background py-24 md:py-32">
+    <section className="bg-background py-16 md:py-20">
       <Container>
         <div className="text-center">
           <Heading as="h2">What Guides Us</Heading>
@@ -36,7 +36,7 @@ export function ValuesSection() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 sm:grid-cols-2">
+        <div className="mt-10 grid gap-8 sm:grid-cols-2">
           {values.map((value) => (
             <div
               key={value.title}

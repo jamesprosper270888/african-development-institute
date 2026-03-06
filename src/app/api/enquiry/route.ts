@@ -7,6 +7,7 @@ import { EnquiryNotification } from "@/lib/email/templates/enquiry-notification"
 import { EnquiryConfirmation } from "@/lib/email/templates/enquiry-confirmation";
 import { db } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
+import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
 
 const enquirySchema = z.object({
   name: z.string().min(1).max(200),
@@ -63,6 +64,19 @@ export async function POST(request: Request) {
     subject: "Thank you for contacting the African Development Institute",
     react: EnquiryConfirmation({ name, type }),
   });
+
+  // Telegram notification
+  await sendTelegramNotification(
+    [
+      `📩 <b>NEW ENQUIRY - ADI</b>`,
+      ``,
+      `👤 <b>Name:</b> ${escapeHtml(name)}`,
+      `📧 <b>Email:</b> ${escapeHtml(email)}`,
+      `📋 <b>Type:</b> ${escapeHtml(type)}`,
+      ``,
+      `💬 ${escapeHtml(message.slice(0, 300))}`,
+    ].join("\n")
+  );
 
   return NextResponse.json({ success: true });
 }

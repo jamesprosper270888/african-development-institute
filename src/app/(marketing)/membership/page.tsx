@@ -55,7 +55,7 @@ export default function MembershipPage() {
   return (
     <>
       {/* Hero */}
-      <Section variant="dark" className="py-28 md:py-36">
+      <Section variant="dark" className="py-20 md:py-28">
         <Container>
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-adi-red">
@@ -79,7 +79,7 @@ export default function MembershipPage() {
           <div className="text-center">
             <Heading as="h2">What Membership Includes</Heading>
           </div>
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {benefits.map((benefit) => (
               <div
                 key={benefit.title}

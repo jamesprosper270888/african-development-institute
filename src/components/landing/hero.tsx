@@ -3,16 +3,13 @@ import { Container } from "@/components/shared/container";
 
 export function Hero() {
   return (
-    <section className="relative bg-adi-black py-32 text-white md:py-40 lg:py-48">
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-adi-black via-adi-black/95 to-adi-black" />
-
-      <Container className="relative">
+    <section className="relative flex h-[calc(100svh-72px)] flex-col items-center justify-center bg-[#242424] px-6 py-12 text-white">
+      <Container className="relative flex-1 flex items-center justify-center">
         <div className="mx-auto max-w-3xl text-center">
           <p className="mb-6 text-sm font-medium uppercase tracking-[0.2em] text-adi-red">
             African Development Institute
           </p>
-          <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-semibold leading-[1.1] tracking-tight md:text-6xl lg:text-7xl">
+          <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-semibold leading-[0.95] tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] md:text-6xl lg:text-7xl">
             From Surviving
             <br />
             to Thriving

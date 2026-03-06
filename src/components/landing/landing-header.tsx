@@ -18,8 +18,8 @@ export function LandingHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-adi-black/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
+    <header className="sticky top-0 z-50 bg-adi-black">
+      <div className="mx-auto flex max-w-[1200px] items-center justify-between px-8 py-4 md:px-12">
         <Link href="/" className="flex items-center">
           <Image
             src="/logos/adi-logo-dark.svg"

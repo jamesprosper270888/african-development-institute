@@ -23,7 +23,7 @@ export default function OrganisationsPage() {
   return (
     <>
       {/* Hero */}
-      <Section variant="dark" className="py-28 md:py-36">
+      <Section variant="dark" className="py-20 md:py-28">
         <Container>
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-adi-red">

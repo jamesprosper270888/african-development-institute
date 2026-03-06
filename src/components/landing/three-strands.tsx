@@ -35,7 +35,7 @@ const strands = [
 
 export function ThreeStrands() {
   return (
-    <section className="bg-adi-offwhite py-24 md:py-32">
+    <section className="bg-adi-offwhite py-16 md:py-20">
       <Container>
         <div className="text-center">
           <Heading as="h2">Three Strands of Work</Heading>
@@ -45,7 +45,7 @@ export function ThreeStrands() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
+        <div className="mt-10 grid gap-8 md:grid-cols-3">
           {strands.map((strand) => (
             <Link
               key={strand.title}

@@ -20,7 +20,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn("py-24 md:py-32", variants[variant], className)}
+      className={cn("py-16 md:py-20", variants[variant], className)}
     >
       {children}
     </section>

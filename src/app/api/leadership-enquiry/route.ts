@@ -7,6 +7,7 @@ import { EnquiryNotification } from "@/lib/email/templates/enquiry-notification"
 import { EnquiryConfirmation } from "@/lib/email/templates/enquiry-confirmation";
 import { db } from "@/lib/db";
 import { leadershipApplications } from "@/lib/schema";
+import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
 
 const leadershipSchema = z.object({
   name: z.string().min(1).max(200),
@@ -70,6 +71,19 @@ export async function POST(request: Request) {
     subject: "Thank you for your interest in the ADI Leadership Programme",
     react: EnquiryConfirmation({ name, type: "leadership" }),
   });
+
+  // Telegram notification (high priority)
+  await sendTelegramNotification(
+    [
+      `🎯 <b>LEADERSHIP ENQUIRY - ADI</b>`,
+      ``,
+      `👤 <b>Name:</b> ${escapeHtml(name)}`,
+      `📧 <b>Email:</b> ${escapeHtml(email)}`,
+      `💼 <b>Role/Org:</b> ${escapeHtml(roleOrg)}`,
+      ``,
+      `💬 ${escapeHtml(motivation.slice(0, 300))}`,
+    ].join("\n")
+  );
 
   return NextResponse.json({ success: true });
 }

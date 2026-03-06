@@ -18,7 +18,7 @@ export function CtaBanner({
   secondaryLabel?: string;
 }) {
   return (
-    <section className="bg-adi-black py-24 text-white md:py-32">
+    <section className="bg-adi-black py-16 text-white md:py-20">
       <Container className="text-center">
         <Heading as="h2" className="text-white">
           {heading}
