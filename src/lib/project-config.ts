@@ -1,7 +1,7 @@
 export const projectConfig = {
   name: "African Development Institute",
   tagline: "From Surviving to Thriving",
-  domain: process.env.NEXT_PUBLIC_DOMAIN || "localhost:3002",
+  domain: process.env.NEXT_PUBLIC_DOMAIN || "localhost:3005",
   supportEmail: "hello@africandevelopmentinstitute.org",
   companyName: "Prospect Connect Media",
 
@@ -20,8 +20,8 @@ export const projectConfig = {
   },
 
   urls: {
-    app: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002",
-    marketing: process.env.NEXT_PUBLIC_MARKETING_URL || "http://localhost:3002",
+    app: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3005",
+    marketing: process.env.NEXT_PUBLIC_MARKETING_URL || "http://localhost:3005",
   },
 } as const;
 

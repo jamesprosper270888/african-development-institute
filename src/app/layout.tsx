@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, Geist } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { Toaster } from "sonner";
+import { GA4Script } from "@/components/analytics/ga4-script";
+import { ClarityScript } from "@/components/analytics/clarity-script";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -28,7 +27,7 @@ export const metadata: Metadata = {
   description:
     "A values-led developmental organisation for Black people in the UK. Membership, leadership development, and organisational partnerships.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002"
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3005"
   ),
 };
 
@@ -38,10 +37,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn(cormorant.variable, dmSans.variable, "font-sans", geist.variable)}>
-      <body className="antialiased">
+    <html
+      lang="en"
+      className={`${cormorant.variable} ${dmSans.variable}`}
+    >
+      <body className="font-sans antialiased">
         {children}
         <Toaster position="bottom-right" richColors />
+        <GA4Script />
+        <ClarityScript />
       </body>
     </html>
   );

@@ -13,9 +13,11 @@ function getSheets() {
     return null;
   }
 
-  const auth = new google.auth.JWT(email, undefined, key.replace(/\\n/g, "\n"), [
-    "https://www.googleapis.com/auth/spreadsheets",
-  ]);
+  const auth = new google.auth.JWT({
+    email,
+    key: key.replace(/\\n/g, "\n"),
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
 
   sheetsClient = google.sheets({ version: "v4", auth });
   return sheetsClient;
