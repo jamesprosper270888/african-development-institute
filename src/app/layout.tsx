@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3005"
   ),
   icons: {
-    icon: "/logos/adi-favicon.svg",
-    apple: "/logos/adi-favicon.svg",
+    icon: "/logos/adi-favicon-sm.svg",
+    apple: "/logos/adi-favicon-sm.svg",
   },
 };
 
