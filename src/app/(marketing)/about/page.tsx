@@ -141,7 +141,7 @@ export default function AboutPage() {
                   Marcia Daigo
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Co-Founder, African Development Institute
+                  Co-Founder &amp; Director, African Development Institute
                 </p>
                 <p className="mt-4 leading-relaxed text-muted-foreground">
                   Marcia Daigo is an executive coach, leadership development
