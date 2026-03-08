@@ -20,13 +20,13 @@ const jsonLd = JSON.stringify({
   name: "African Development Institute",
   alternateName: "ADI",
   description:
-    "A values-led developmental organisation for Black people in the UK. Membership, leadership development, and organisational partnerships.",
+    "A community-based leadership organisation for Black people. Membership, leadership development, and organisational partnerships.",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://africandevelopmentinstitute.org",
   foundingDate: "2025",
-  founder: {
-    "@type": "Person",
-    name: "Pam Rowe",
-  },
+  founder: [
+    { "@type": "Person", name: "Pam Rowe" },
+    { "@type": "Person", name: "Marcia Daigo" },
+  ],
   sameAs: [],
 });
 

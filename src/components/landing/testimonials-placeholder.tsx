@@ -4,7 +4,7 @@ import { Heading } from "@/components/shared/heading";
 const testimonials = [
   {
     quote:
-      "ADI gave me a space where I didn't have to explain myself — just grow. The community changed how I see my own potential.",
+      "ADI gave me a space where I didn't have to explain myself — just grow. The community changed how I see my own leadership.",
     name: "Community Member",
     role: "ADI Member",
   },

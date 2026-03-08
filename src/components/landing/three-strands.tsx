@@ -8,7 +8,7 @@ const strands = [
     icon: Users,
     title: "Membership",
     description:
-      "A developmental community for Black professionals. Coaching, masterminds, learning, and authentic connection.",
+      "An ongoing developmental community. Space to think clearly, get practical help, and grow alongside others.",
     href: "/membership",
     color: "text-adi-red",
     bgColor: "bg-adi-red/5",
@@ -17,16 +17,16 @@ const strands = [
     icon: Crown,
     title: "Leadership Development",
     description:
-      "A six-month programme developing the self as leader. Deep, relational, values-led work for those ready to lead differently.",
+      "A six-month programme for Black mid-to-senior leaders. Structured, identity-level leadership development for those ready to step into greater responsibility.",
     href: "/leadership-programme",
     color: "text-adi-green",
     bgColor: "bg-adi-green/5",
   },
   {
     icon: Building2,
-    title: "Organisations",
+    title: "Working With Organisations",
     description:
-      "Partnership-led consultancy for organisations committed to equity, development, and systemic change.",
+      "ADI partners with organisations to deliver leadership and management development, retaining ownership of its approach and values.",
     href: "/organisations",
     color: "text-adi-black",
     bgColor: "bg-adi-black/5",

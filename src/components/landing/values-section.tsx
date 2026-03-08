@@ -3,24 +3,39 @@ import { Heading } from "@/components/shared/heading";
 
 const values = [
   {
-    title: "Rootedness",
+    title: "Psychological safety comes first",
     description:
-      "Grounded in the lived experience, heritage, and wisdom of people of African and Caribbean descent.",
+      "If safety, trust or belonging are undermined, the idea does not proceed.",
   },
   {
-    title: "Development",
+    title: "Development before extraction",
     description:
-      "Committed to growth — personal, professional, and collective — as a lifelong practice.",
+      "ADI exists to develop people, not to use them. Participation must be ethical, optional and growth-enhancing.",
   },
   {
-    title: "Integrity",
+    title: "Growth with dignity",
     description:
-      "Honest, transparent, and accountable in all we do. Our values are not aspirational — they are operational.",
+      "Stretch is invited, not imposed. Accountability is consent-based.",
   },
   {
-    title: "Community",
+    title: "Clarity without hierarchy",
     description:
-      "We believe in the power of collective effort, mutual support, and shared responsibility.",
+      "Pathways are clear and distinct without ranking worth.",
+  },
+  {
+    title: "Opportunity without entitlement",
+    description:
+      "Access is based on readiness, alignment and fit, not proximity or expectation.",
+  },
+  {
+    title: "Stewardship over personality",
+    description:
+      "ADI must be able to thrive beyond individual leaders while remaining true to its values.",
+  },
+  {
+    title: "Integrity over scale",
+    description:
+      "Growth must not erode relational depth, cultural integrity or purpose.",
   },
 ];
 
@@ -29,14 +44,14 @@ export function ValuesSection() {
     <section className="bg-background py-16 md:py-20">
       <Container>
         <div className="text-center">
-          <Heading as="h2">What Guides Us</Heading>
+          <Heading as="h2">Values as Guardrails</Heading>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Everything ADI does is anchored in a set of core values drawn from
-            our constitution — not as slogans, but as commitments.
+            These principles act as constitutional filters for every decision ADI
+            makes.
           </p>
         </div>
 
-        <div className="mt-10 grid gap-8 sm:grid-cols-2">
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {values.map((value) => (
             <div
               key={value.title}

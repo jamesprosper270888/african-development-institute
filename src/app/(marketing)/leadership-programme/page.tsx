@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 };
 
 const journeyMonths = [
-  { month: "Month 1", title: "Arrival", description: "Grounding in values, building the container, establishing trust." },
-  { month: "Month 2", title: "Roots", description: "Exploring heritage, identity, and the foundations of your leadership." },
-  { month: "Month 3", title: "Reckoning", description: "Confronting the patterns, narratives, and systems that shape how you lead." },
-  { month: "Month 4", title: "Practice", description: "Developing new ways of showing up — in relationships, in organisations, in community." },
-  { month: "Month 5", title: "Integration", description: "Bringing it together. Testing, refining, embodying your leadership." },
-  { month: "Month 6", title: "Departure", description: "Completion, not endings. Carrying the work forward with intention." },
+  { month: "Month 1", title: "Permission to Slow", description: "Removing performance pressure and establishing a different pace." },
+  { month: "Month 2", title: "Recognising Patterns Under Pressure", description: "Identifying personal reflexes without judgement." },
+  { month: "Month 3", title: "Staying Rather Than Moving Away", description: "Strengthening tolerance for discomfort without rushing to resolve." },
+  { month: "Month 4", title: "Choice Without Self-Blame", description: "Locating agency without collapsing into self-blame." },
+  { month: "Month 5", title: "Integration Into Daily Leadership", description: "Doing less, saying less, meaning more." },
+  { month: "Month 6", title: "Consolidation and Return of Authority", description: "Strengthening internal leadership without reliance on the group." },
 ];
 
 export default function LeadershipProgrammePage() {
@@ -33,8 +33,9 @@ export default function LeadershipProgrammePage() {
               Developing the Self as Leader
             </Heading>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/70">
-              A six-month, values-led programme for Black leaders who are ready
-              to do the work no one else names — and emerge transformed.
+              A six-month leadership experience for Black mid-to-senior leaders.
+              You already lead at scale. This programme strengthens how you lead
+              under pressure.
             </p>
           </div>
         </Container>
@@ -47,19 +48,18 @@ export default function LeadershipProgrammePage() {
             <Heading as="h2">The Leadership Work No One Names</Heading>
             <div className="mt-8 space-y-6 text-lg leading-relaxed text-muted-foreground">
               <p>
-                Most leadership programmes teach you to manage others. This one
-                starts with you. It asks the questions that rarely get asked in
-                professional development: Who are you when no one is watching?
-                What stories do you carry about power, authority, and belonging?
-                What would it mean to lead from a place of wholeness, not
-                survival?
+                Black leaders often operate in environments where scrutiny is
+                higher, margin for error feels smaller, cultural translation is
+                constant, and systemic tension is rarely named. Over time,
+                intelligent adaptations develop. You over-prepare. You
+                over-explain. You carry more than is yours. ADI works at the
+                moment those patterns show up — and restores choice.
               </p>
               <p>
-                This is deep, relational, values-led work. It draws on
-                African-centred thought, systemic practice, and decades of
-                experience in leadership development. It is not therapy — but it
-                is therapeutic. It is not coaching — but it is developmental. It
-                is a container in which transformational work can happen.
+                Developing the Self as Leader is a six-month, identity-level
+                leadership experience. It strengthens one central capacity: the
+                ability to notice when pressure hits, slow down in that moment,
+                and choose how to respond — rather than react automatically.
               </p>
             </div>
           </div>
@@ -77,11 +77,11 @@ export default function LeadershipProgrammePage() {
                   This Programme Is
                 </h3>
                 <ul className="mt-4 space-y-3 text-muted-foreground">
-                  <li>A developmental journey, not a training course</li>
-                  <li>Relational, not transactional</li>
-                  <li>Values-led, not competency-driven</li>
-                  <li>Rooted in African-centred thought</li>
-                  <li>Invitation-led, not application-based</li>
+                  <li>A six-month, identity-level leadership experience</li>
+                  <li>Structured and time-bound</li>
+                  <li>Explicit about stretch and accountability</li>
+                  <li>Designed for people at a particular moment of readiness</li>
+                  <li>Rooted in ADI&apos;s values</li>
                 </ul>
               </div>
               <div className="rounded-xl border border-border bg-card p-8">
@@ -89,11 +89,11 @@ export default function LeadershipProgrammePage() {
                   This Programme Is Not
                 </h3>
                 <ul className="mt-4 space-y-3 text-muted-foreground">
-                  <li>A tick-box leadership certificate</li>
-                  <li>Therapy or counselling</li>
-                  <li>A networking opportunity</li>
-                  <li>Something to put on your LinkedIn</li>
-                  <li>Comfortable — growth rarely is</li>
+                  <li>Skills training</li>
+                  <li>Confidence building</li>
+                  <li>Performance optimisation</li>
+                  <li>A networking cohort</li>
+                  <li>A therapy group</li>
                 </ul>
               </div>
             </div>
@@ -108,7 +108,8 @@ export default function LeadershipProgrammePage() {
             <div className="text-center">
               <Heading as="h2">The Six-Month Journey</Heading>
               <p className="mt-4 text-lg text-muted-foreground">
-                Each month builds on the last. There are no shortcuts.
+                The programme returns to the same core moment each month,
+                deepening capacity rather than adding theory.
               </p>
             </div>
             <div className="mt-12 space-y-6">
@@ -144,14 +145,10 @@ export default function LeadershipProgrammePage() {
             <Heading as="h2">The Container</Heading>
             <div className="mt-8 space-y-4 text-lg leading-relaxed text-muted-foreground">
               <p>
-                The programme runs over six months with a blend of in-person
-                residential days, online group sessions, one-to-one
-                developmental conversations, and reflective practice between
-                sessions.
-              </p>
-              <p>
-                The group is deliberately small — a maximum of 8 participants —
-                to create the depth and safety this work requires.
+                The programme runs over six months. One online session per month,
+                2.5–3 hours per session, with in-person residential days woven
+                into the programme. The cohort is intentionally small — a maximum
+                of 8 participants. Depth requires steadiness.
               </p>
             </div>
           </div>
@@ -170,8 +167,9 @@ export default function LeadershipProgrammePage() {
             </Heading>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/70">
               The first cohort is invitation-led and limited to 8 participants.
-              If you sense this work is for you, we invite you to request a
-              conversation. No hard sell — just an honest exploration of fit.
+              Programme begins Spring 2026. If you sense this work is for you,
+              we invite you to request a conversation. No hard sell — just an
+              honest exploration of fit.
             </p>
           </div>
         </Container>
@@ -188,7 +186,7 @@ export default function LeadershipProgrammePage() {
                   Pam Rowe
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Founder &amp; Lead Facilitator
+                  Co-Founder &amp; Facilitator
                 </p>
                 <p className="mt-4 leading-relaxed text-muted-foreground">
                   Leadership development practitioner and community builder with
@@ -198,15 +196,18 @@ export default function LeadershipProgrammePage() {
               </div>
               <div className="rounded-xl border border-border bg-card p-8">
                 <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
-                  Marcia Sherrie-Daigo
+                  Marcia Daigo
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Co-Facilitator
+                  Co-Founder &amp; Facilitator
                 </p>
                 <p className="mt-4 leading-relaxed text-muted-foreground">
-                  Experienced facilitator and practitioner bringing deep
-                  expertise in systemic work, group dynamics, and
-                  developmental practice.
+                  Executive coach, leadership development consultant, and
+                  organisational development specialist with over 15 years of
+                  experience across the NHS, public sector, and voluntary
+                  organisations. Her work combines values-driven practice with
+                  organisational insight, strengthening leadership culture,
+                  confidence, and accountability.
                 </p>
               </div>
             </div>

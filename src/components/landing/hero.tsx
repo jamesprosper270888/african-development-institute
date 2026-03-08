@@ -15,9 +15,9 @@ export function Hero() {
             to Thriving
           </h1>
           <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-white/70">
-            A values-led developmental organisation for Black people in the UK.
-            Building community, developing leaders, and strengthening
-            organisations.
+            A community-based leadership organisation for Black people.
+            Supporting growth, developing confident leaders, and enabling
+            collective progress.
           </p>
           <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link

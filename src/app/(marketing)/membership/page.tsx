@@ -16,13 +16,13 @@ const benefits = [
     icon: Users,
     title: "Community",
     description:
-      "A curated community of Black professionals committed to growth, mutual support, and honest conversation.",
+      "A trusted community where you are not navigating challenges alone.",
   },
   {
     icon: Brain,
     title: "Masterminds",
     description:
-      "Small-group mastermind sessions designed to sharpen thinking, challenge assumptions, and accelerate progress.",
+      "Structured sessions that help you clarify ideas, work through challenges, strengthen decision-making, and maintain focus and accountability.",
   },
   {
     icon: MessageCircle,
@@ -34,7 +34,7 @@ const benefits = [
     icon: BookOpen,
     title: "Learning",
     description:
-      "Curated resources, workshops, and learning journeys rooted in African-centred thought and contemporary practice.",
+      "Learning from others' experiences, insights and progress. Shared perspective and practical development.",
   },
   {
     icon: Calendar,
@@ -45,10 +45,10 @@ const benefits = [
 ];
 
 const pathway = [
-  { stage: "Entry", description: "Begin your journey. Access core community, events, and resources." },
-  { stage: "Growth", description: "Deepen your engagement. Masterminds, coaching, and learning pathways." },
-  { stage: "Leadership", description: "Step into leadership. Facilitation, mentoring, and programme contribution." },
-  { stage: "Legacy", description: "Shape the future. Governance, strategy, and institutional stewardship." },
+  { stage: "Entry", description: "Belonging, orientation, and clarity." },
+  { stage: "Growth", description: "Development, momentum, and focus." },
+  { stage: "Leadership", description: "Influence, contribution, and readiness." },
+  { stage: "Legacy", description: "Mentoring, role modelling, and generational impact." },
 ];
 
 export default function MembershipPage() {
@@ -65,9 +65,10 @@ export default function MembershipPage() {
               ADI Membership
             </Heading>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/70">
-              A developmental community for Black professionals in the UK. Not a
-              networking club — a space where growth, accountability, and
-              authentic connection are the norm.
+              An ongoing developmental community for people who want space to
+              think clearly, get practical help, and grow alongside others who
+              understand the realities of navigating leadership, business and
+              professional life.
             </p>
           </div>
         </Container>
@@ -107,8 +108,8 @@ export default function MembershipPage() {
             <div className="text-center">
               <Heading as="h2">The Membership Pathway</Heading>
               <p className="mt-4 text-lg text-muted-foreground">
-                ADI membership is a journey, not a subscription. As you grow, your
-                relationship with ADI deepens.
+                ADI membership is a developmental pathway, not a static
+                subscription. People join at different stages and grow over time.
               </p>
             </div>
             <div className="mt-12 space-y-6">
@@ -141,10 +142,10 @@ export default function MembershipPage() {
           <div className="mx-auto max-w-3xl text-center">
             <Heading as="h2">Who Is This For?</Heading>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              ADI membership is for Black professionals in the UK who want more
-              than a LinkedIn connection. You're looking for a space that takes
-              your development seriously, honours your heritage, and holds you to
-              your own highest standards.
+              ADI membership is for people who want to grow with confidence and
+              clarity, value community and shared learning, are navigating
+              leadership, business or professional development, and want support
+              that is practical, reflective and grounded.
             </p>
           </div>
         </Container>

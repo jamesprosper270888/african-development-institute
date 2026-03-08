@@ -7,17 +7,17 @@ import { CtaBanner } from "@/components/landing";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about the African Development Institute — our purpose, values, and the founder, Pam Rowe.",
+    "Learn about the African Development Institute — our purpose, values, and founders, Pam Rowe and Marcia Daigo.",
 };
 
 const values = [
-  "Ubuntu — I am because we are",
-  "Integrity — honest, transparent, and accountable",
-  "Excellence — striving for the highest standards in all we do",
-  "Rootedness — grounded in African and Caribbean heritage and wisdom",
-  "Development — committed to continuous growth",
-  "Community — collective effort and mutual responsibility",
-  "Justice — working towards equity and systemic change",
+  "Psychological safety comes first — If safety, trust or belonging are undermined, the idea does not proceed.",
+  "Development before extraction — ADI exists to develop people, not to use them. Participation must be ethical, optional and growth-enhancing.",
+  "Growth with dignity — Stretch is invited, not imposed. Accountability is consent-based.",
+  "Clarity without hierarchy — Pathways are clear and distinct without ranking worth.",
+  "Opportunity without entitlement — Access is based on readiness, alignment and fit, not proximity or expectation.",
+  "Stewardship over personality — ADI must be able to thrive beyond individual leaders while remaining true to its values.",
+  "Integrity over scale — Growth must not erode relational depth, cultural integrity or purpose.",
 ];
 
 export default function AboutPage() {
@@ -29,15 +29,17 @@ export default function AboutPage() {
           <div className="mx-auto max-w-3xl">
             <Heading as="h1">About ADI</Heading>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              The African Development Institute exists to create the conditions
-              in which Black people in the UK can move from surviving to
-              thriving — drawing on the strength, wisdom and leadership of
-              people of African and Caribbean heritage.
+              The African Development Institute exists to support Black people
+              in moving from surviving to thriving — living and leading with
+              confidence, agency, and possibility. ADI builds on the strength,
+              wisdom and leadership of Black people throughout history,
+              supporting members to draw on this lineage as a source of
+              confidence, agency and possibility.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              ADI is a values-led developmental organisation. We work across
+              ADI is a community-based leadership organisation. We work across
               three interconnected areas — membership, leadership development,
-              and organisational partnerships — each rooted in the same set of
+              and working with organisations — each rooted in the same set of
               constitutional values.
             </p>
           </div>
@@ -55,11 +57,11 @@ export default function AboutPage() {
                   ADI Is
                 </h3>
                 <ul className="mt-4 space-y-3 text-muted-foreground">
-                  <li>A developmental community, not a networking club</li>
-                  <li>Values-led, not trend-led</li>
-                  <li>Rooted in heritage, not nostalgia</li>
-                  <li>Focused on systemic change, not performative gestures</li>
-                  <li>Built on trust, earned through integrity</li>
+                  <li>A developmental community and institution</li>
+                  <li>Values-led and purpose-driven</li>
+                  <li>Rooted in the strength, wisdom and leadership of Black people throughout history</li>
+                  <li>Built on trust, relationship and shared learning</li>
+                  <li>Focused on confidence, agency and collective advancement</li>
                 </ul>
               </div>
               <div className="rounded-xl border border-border bg-card p-8">
@@ -67,11 +69,11 @@ export default function AboutPage() {
                   ADI Is Not
                 </h3>
                 <ul className="mt-4 space-y-3 text-muted-foreground">
-                  <li>A diversity consultancy selling quick fixes</li>
-                  <li>A space for performative allyship</li>
-                  <li>An organisation that waters down its mission for comfort</li>
-                  <li>A programme that treats Blackness as a problem to solve</li>
-                  <li>An echo chamber — challenge is part of growth</li>
+                  <li>A sales platform or referral network</li>
+                  <li>A route to personal consultancy opportunities</li>
+                  <li>A programme that starts from deficit or treats Blackness as a problem</li>
+                  <li>A diversity consultancy or quick-fix provider</li>
+                  <li>An organisation that waters down its purpose for comfort</li>
                 </ul>
               </div>
             </div>
@@ -85,8 +87,9 @@ export default function AboutPage() {
           <div className="mx-auto max-w-3xl">
             <Heading as="h2">Our Constitutional Values</Heading>
             <p className="mt-4 text-lg text-muted-foreground">
-              These are not aspirational — they are operational. Every decision
-              ADI makes is tested against these seven guardrails.
+              The following principles act as constitutional filters for any
+              future idea, programme, partnership or offer. If these principles
+              are weakened, ADI ceases to be itself.
             </p>
             <div className="mt-10 space-y-4">
               {values.map((value, i) => (
@@ -109,28 +112,54 @@ export default function AboutPage() {
       <Section>
         <Container>
           <div className="mx-auto max-w-3xl">
-            <Heading as="h2">The Founder</Heading>
-            <div className="mt-10 rounded-xl border border-border bg-card p-8">
-              <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
-                Pam Rowe
-              </h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Founder &amp; Director, African Development Institute
-              </p>
-              <p className="mt-4 leading-relaxed text-muted-foreground">
-                Pam Rowe is a leadership development practitioner, facilitator,
-                and community builder with decades of experience working at the
-                intersection of personal development, organisational change, and
-                racial equity. She founded ADI from a deep conviction that Black
-                people in the UK deserve developmental spaces that honour their
-                heritage, challenge them to grow, and refuse to compromise on
-                values.
-              </p>
-              <p className="mt-4 leading-relaxed text-muted-foreground">
-                Her work draws on a rich tradition of African-centred thought,
-                systemic leadership practice, and a commitment to creating
-                containers in which transformational work can happen.
-              </p>
+            <Heading as="h2">The Founders</Heading>
+            <div className="mt-10 grid gap-8 md:grid-cols-2">
+              <div className="rounded-xl border border-border bg-card p-8">
+                <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
+                  Pam Rowe
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Co-Founder &amp; Director, African Development Institute
+                </p>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  Pam Rowe is a leadership development practitioner, facilitator,
+                  and community builder with decades of experience working at the
+                  intersection of personal development, organisational change, and
+                  racial equity. She founded ADI from a deep conviction that Black
+                  people in the UK deserve developmental spaces that honour their
+                  heritage, challenge them to grow, and refuse to compromise on
+                  values.
+                </p>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  Her work draws on a rich tradition of African-centred thought,
+                  systemic leadership practice, and a commitment to creating
+                  containers in which transformational work can happen.
+                </p>
+              </div>
+              <div className="rounded-xl border border-border bg-card p-8">
+                <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
+                  Marcia Daigo
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Co-Founder, African Development Institute
+                </p>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  Marcia Daigo is an executive coach, leadership development
+                  consultant, and organisational development specialist with over
+                  15 years of experience across the NHS, public sector, and
+                  voluntary organisations. She co-founded ADI from the conviction
+                  that lasting leadership is built on multiple levels —
+                  psychological, emotional, professional, and practical — and that
+                  Black people deserve developmental spaces where this depth of
+                  work is the starting point.
+                </p>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  Her practice combines values-driven leadership development with
+                  organisational insight, supporting individuals and teams to
+                  strengthen confidence, navigate complexity, and lead with
+                  clarity and accountability.
+                </p>
+              </div>
             </div>
           </div>
         </Container>

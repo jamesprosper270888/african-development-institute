@@ -11,12 +11,9 @@ export const metadata: Metadata = {
 };
 
 const offerings = [
-  "Leadership development programmes tailored to your organisational context",
-  "Equity and inclusion strategy that goes beyond compliance",
-  "Facilitated conversations on race, power, and systemic change",
-  "Team development and relational practice",
-  "Board and governance development",
-  "Community engagement and partnership building",
+  "Leadership development programmes",
+  "Management and leadership development",
+  "Partnership-based delivery grounded in lived experience",
 ];
 
 export default function OrganisationsPage() {
@@ -33,8 +30,9 @@ export default function OrganisationsPage() {
               Working With Organisations
             </Heading>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/70">
-              Partnership-led consultancy for organisations committed to equity,
-              development, and systemic change — not quick fixes.
+              ADI partners with organisations and sector bodies to deliver
+              leadership and management development — retaining ownership of its
+              work and values.
             </p>
           </div>
         </Container>
@@ -46,10 +44,10 @@ export default function OrganisationsPage() {
           <div className="mx-auto max-w-3xl">
             <Heading as="h2">What ADI Delivers</Heading>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              ADI works with organisations that are serious about change — not
-              those looking for a diversity tick-box. Our work is
-              partnership-led, relationally grounded, and designed to create
-              lasting shifts in culture, leadership, and practice.
+              ADI partners with organisations and sector bodies to deliver
+              leadership and management development. This strand allows ADI to
+              extend its impact into systems and organisations, while retaining
+              ownership of its work and values.
             </p>
             <div className="mt-10 space-y-4">
               {offerings.map((offering, i) => (
@@ -75,17 +73,13 @@ export default function OrganisationsPage() {
             <Heading as="h2">How ADI Works With Organisations</Heading>
             <div className="mt-8 space-y-6 text-lg leading-relaxed text-muted-foreground">
               <p>
-                Every engagement starts with a conversation — not a pitch. We
-                take time to understand your context, your challenges, and your
-                readiness for the work. From there, we co-design an approach
-                that meets you where you are and moves you towards where you
-                need to be.
+                Every engagement begins with a conversation to confirm fit and
+                alignment. Programmes are designed, held and delivered by ADI.
+                ADI retains ownership of its approach and content.
               </p>
               <p>
-                ADI does not parachute in with pre-packaged programmes. We
-                build relationships, earn trust, and do the work alongside you.
-                This means our engagements are typically longer-term, deeper,
-                and more transformational than traditional consultancy.
+                Work is agreed case by case, based on alignment of values and
+                purpose. Delivery is partnership-based, not transactional.
               </p>
             </div>
           </div>
@@ -103,11 +97,10 @@ export default function OrganisationsPage() {
                   What Partners Can Expect
                 </h3>
                 <ul className="mt-4 space-y-3 text-muted-foreground">
-                  <li>Honest, direct conversations — even when uncomfortable</li>
-                  <li>Deep expertise in race, leadership, and systemic change</li>
-                  <li>Bespoke design, not off-the-shelf solutions</li>
-                  <li>Long-term relational engagement</li>
-                  <li>Measurable, sustainable outcomes</li>
+                  <li>Thoughtful, values-led engagement</li>
+                  <li>High-quality leadership insight and development</li>
+                  <li>Clear boundaries and accountability</li>
+                  <li>A focus on sustainable impact</li>
                 </ul>
               </div>
               <div className="rounded-xl border border-border bg-card p-8">
@@ -115,11 +108,10 @@ export default function OrganisationsPage() {
                   What We Expect From Partners
                 </h3>
                 <ul className="mt-4 space-y-3 text-muted-foreground">
-                  <li>Genuine commitment to change, not optics</li>
-                  <li>Senior leadership engagement and sponsorship</li>
-                  <li>Willingness to be challenged and to do the work</li>
-                  <li>Resources and time allocated for meaningful impact</li>
-                  <li>Openness to approaches that go beyond the conventional</li>
+                  <li>Alignment of values and purpose</li>
+                  <li>Willingness to begin with conversation, not assumption</li>
+                  <li>Commitment to partnership, not transaction</li>
+                  <li>Openness to ADI retaining ownership of its approach</li>
                 </ul>
               </div>
             </div>
