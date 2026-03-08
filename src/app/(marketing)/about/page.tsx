@@ -119,7 +119,9 @@ export default function AboutPage() {
                   Pam Rowe
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Co-Founder &amp; Director, African Development Institute
+                  Co-Founder &amp; Director
+                  <br />
+                  African Development Institute
                 </p>
                 <p className="mt-4 leading-relaxed text-muted-foreground">
                   Pam Rowe is a leadership development practitioner, facilitator,
@@ -141,7 +143,9 @@ export default function AboutPage() {
                   Marcia Daigo
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Co-Founder &amp; Director, African Development Institute
+                  Co-Founder &amp; Director
+                  <br />
+                  African Development Institute
                 </p>
                 <p className="mt-4 leading-relaxed text-muted-foreground">
                   Marcia Daigo is an executive coach, leadership development
