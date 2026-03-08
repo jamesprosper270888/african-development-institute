@@ -17,7 +17,12 @@ import {
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
+  const rawCallback = searchParams.get("callbackUrl") || "/app/dashboard";
+  // Prevent open redirect — only allow relative paths
+  const callbackUrl =
+    rawCallback.startsWith("/") && !rawCallback.startsWith("//")
+      ? rawCallback
+      : "/app/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

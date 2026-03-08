@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
+import { z } from "zod/v4";
 import { db } from "@/lib/db";
 import { members, user } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { getAuthSession } from "@/lib/api-auth";
+
+const profilePatchSchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+  phone: z.string().max(30).nullable().optional(),
+});
 
 export async function GET() {
   const session = await getAuthSession();
@@ -36,7 +42,11 @@ export async function PATCH(request: Request) {
   }
 
   const body = await request.json();
-  const { name, phone } = body;
+  const parsed = profilePatchSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input", details: parsed.error.issues }, { status: 400 });
+  }
+  const { name, phone } = parsed.data;
 
   // Update the member record if linked
   const member = await db.query.members.findFirst({

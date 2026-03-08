@@ -3,6 +3,14 @@ import { db } from "@/lib/db";
 import { members } from "@/lib/schema";
 import { getAdminSession } from "@/lib/api-auth";
 
+// Prevent CSV formula injection by prefixing dangerous characters
+function sanitizeCsvValue(value: string): string {
+  if (/^[=+\-@\t\r]/.test(value)) {
+    return `'${value}`;
+  }
+  return value;
+}
+
 export async function GET() {
   const session = await getAdminSession();
   if (!session) {
@@ -25,14 +33,14 @@ export async function GET() {
   ];
 
   const rows = allMembers.map((m) => [
-    m.name,
-    m.email,
-    m.phone || "",
-    m.membershipTier || "",
-    m.membershipStatus,
-    m.pathwayStage,
+    sanitizeCsvValue(m.name),
+    sanitizeCsvValue(m.email),
+    sanitizeCsvValue(m.phone || ""),
+    sanitizeCsvValue(m.membershipTier || ""),
+    sanitizeCsvValue(m.membershipStatus),
+    sanitizeCsvValue(m.pathwayStage),
     m.joinedAt ? new Date(m.joinedAt).toISOString().split("T")[0] : "",
-    (m.notes || "").replace(/"/g, '""'),
+    sanitizeCsvValue((m.notes || "").replace(/"/g, '""')),
   ]);
 
   const csv = [

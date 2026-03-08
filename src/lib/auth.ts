@@ -1,6 +1,8 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { eq } from "drizzle-orm";
 import { db } from "./db";
+import { user as userTable } from "./schema";
 import { sendEmail } from "./email/resend";
 import { VerificationEmail } from "./email/templates/verification-email";
 import { ResetPasswordEmail } from "./email/templates/reset-password-email";
@@ -75,10 +77,11 @@ export const auth = betterAuth({
       create: {
         after: async (user) => {
           if (isAdmin(user.email)) {
-            // Auto-set admin role
-            await db.execute(
-              `UPDATE "user" SET role = 'admin' WHERE id = '${user.id}'`
-            );
+            // Auto-set admin role (parameterized via Drizzle ORM)
+            await db
+              .update(userTable)
+              .set({ role: "admin" })
+              .where(eq(userTable.id, user.id));
           }
         },
       },

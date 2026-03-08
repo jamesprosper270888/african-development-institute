@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { headers, cookies } from "next/headers";
+import { headers } from "next/headers";
 import { auth, isAdmin } from "@/lib/auth";
 import { AppSidebar } from "@/components/app/app-sidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
@@ -18,17 +18,6 @@ export default async function AppLayout({
   }
 
   const userIsAdmin = isAdmin(session.user.email);
-
-  // Set admin cookie for middleware stats check
-  if (userIsAdmin) {
-    const cookieStore = await cookies();
-    cookieStore.set("adi_admin_email", session.user.email, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-  }
 
   return (
     <SidebarProvider>

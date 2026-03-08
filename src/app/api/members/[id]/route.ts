@@ -1,8 +1,20 @@
 import { NextResponse } from "next/server";
+import { z } from "zod/v4";
 import { db } from "@/lib/db";
 import { members } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/api-auth";
+
+const memberPatchSchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+  email: z.email().max(320).optional(),
+  phone: z.string().max(30).nullable().optional(),
+  membershipTier: z.enum(["individual", "professional", "organisation"]).nullable().optional(),
+  membershipStatus: z.enum(["interest", "active", "paused", "cancelled"]).optional(),
+  pathwayStage: z.enum(["entry", "growth", "leadership", "legacy"]).optional(),
+  notes: z.string().max(5000).nullable().optional(),
+  userId: z.string().max(100).nullable().optional(),
+});
 
 export async function PATCH(
   request: Request,
@@ -16,21 +28,15 @@ export async function PATCH(
   const { id } = await params;
   const body = await request.json();
 
-  const updates: Record<string, unknown> = {};
-  const allowedFields = [
-    "name",
-    "email",
-    "phone",
-    "membershipTier",
-    "membershipStatus",
-    "pathwayStage",
-    "notes",
-    "userId",
-  ];
+  const parsed = memberPatchSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input", details: parsed.error.issues }, { status: 400 });
+  }
 
-  for (const field of allowedFields) {
-    if (field in body) {
-      updates[field] = body[field];
+  const updates: Record<string, unknown> = {};
+  for (const [field, value] of Object.entries(parsed.data)) {
+    if (value !== undefined) {
+      updates[field] = value;
     }
   }
 

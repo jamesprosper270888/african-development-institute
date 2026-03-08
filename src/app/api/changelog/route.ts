@@ -118,8 +118,8 @@ function getDateKey(dateString: string): string {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const page = parseInt(searchParams.get("page") || "1", 10);
-  const perPage = parseInt(searchParams.get("perPage") || "5", 10);
+  const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+  const perPage = Math.min(20, Math.max(1, parseInt(searchParams.get("perPage") || "5", 10)));
 
   try {
     const allCommits: GitHubCommit[] = [];

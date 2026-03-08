@@ -75,10 +75,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Stats routes — require admin
+  // Stats routes — require session (admin check done at layout level)
   if (context === "stats") {
-    const adminEmail = request.cookies.get("adi_admin_email")?.value;
-    if (!adminEmail || !ADMIN_EMAILS.includes(adminEmail)) {
+    const sessionToken = request.cookies.get("adi.session_token")?.value;
+    if (!sessionToken) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);

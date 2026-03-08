@@ -17,8 +17,11 @@ export async function POST(request: NextRequest) {
   const signature = request.headers.get("x-hub-signature-256");
   const event = request.headers.get("x-github-event");
 
-  // Verify signature if secret is configured
-  if (WEBHOOK_SECRET && !verifySignature(body, signature)) {
+  // Reject if webhook secret is not configured or signature is invalid
+  if (!WEBHOOK_SECRET) {
+    return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
+  }
+  if (!verifySignature(body, signature)) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
@@ -32,7 +35,7 @@ export async function POST(request: NextRequest) {
     for (const commit of commits) {
       const author = escapeHtml(commit.author?.username || commit.author?.name || "unknown");
       const message = escapeHtml((commit.message || "").split("\n")[0]);
-      const url = commit.url || "";
+      const url = escapeHtml(commit.url || "");
 
       const text = [
         `🔧 <b>NEW COMMIT - ADI</b>`,
@@ -56,7 +59,7 @@ export async function POST(request: NextRequest) {
     if (pr && (action === "opened" || action === "closed" || action === "merged")) {
       const title = escapeHtml(pr.title || "");
       const user = escapeHtml(pr.user?.login || "unknown");
-      const url = pr.html_url || "";
+      const url = escapeHtml(pr.html_url || "");
       const status = pr.merged ? "merged" : action;
 
       const text = [
