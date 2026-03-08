@@ -166,7 +166,7 @@ export default function MembershipPage() {
                 Monthly
               </h3>
               <div className="mt-4">
-                <span className="text-4xl font-bold">£47</span>
+                <span className="text-4xl font-bold">£49</span>
                 <span className="text-muted-foreground">/month</span>
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
@@ -181,11 +181,11 @@ export default function MembershipPage() {
                 Annual
               </h3>
               <div className="mt-4">
-                <span className="text-4xl font-bold">£500</span>
+                <span className="text-4xl font-bold">£499</span>
                 <span className="text-muted-foreground">/year</span>
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
-                Save over £60 per year. Full commitment, full access.
+                Save over £85 per year. Full commitment, full access.
               </p>
             </div>
           </div>
