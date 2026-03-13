@@ -45,3 +45,6 @@ next-env.d.ts
 # Remotion
 videos/out/
 videos/node_modules/
+
+# Private
+invoices/
