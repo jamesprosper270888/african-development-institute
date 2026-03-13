@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# Remotion
+videos/out/
+videos/node_modules/
