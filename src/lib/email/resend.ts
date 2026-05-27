@@ -12,7 +12,7 @@ function getResend(): Resend | null {
   return resendClient;
 }
 
-const EMAIL_FROM = process.env.EMAIL_FROM || "ADI <hello@africandevelopmentinstitute.org>";
+const EMAIL_FROM = process.env.EMAIL_FROM || "ADI <hello@africandevelopmentinstitute.com>";
 
 export async function sendEmail({
   to,

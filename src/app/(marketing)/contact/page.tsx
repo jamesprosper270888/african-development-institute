@@ -34,10 +34,10 @@ export default function ContactPage() {
                 You can also reach us directly at
               </p>
               <a
-                href="mailto:hello@africandevelopmentinstitute.org"
+                href="mailto:hello@africandevelopmentinstitute.com"
                 className="mt-1 inline-block font-medium text-adi-green transition-colors hover:text-adi-green/80"
               >
-                hello@africandevelopmentinstitute.org
+                hello@africandevelopmentinstitute.com
               </a>
             </div>
           </div>

@@ -66,8 +66,41 @@ export default function LeadershipProgrammePage() {
         </Container>
       </Section>
 
-      {/* What This Programme Is (and Is Not) */}
+      {/* Who This Is For */}
       <Section>
+        <Container>
+          <div className="mx-auto max-w-3xl">
+            <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-adi-green">
+              Who This Is For
+            </p>
+            <Heading as="h2">
+              Leaders who are already operating at a high level
+            </Heading>
+            <p className="mt-4 text-lg text-muted-foreground">
+              This programme is designed for leaders who are performing strongly
+              but navigating environments with high visibility and significant
+              expectations.
+            </p>
+            <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-2">
+              {[
+                "Operating at a high level, but not always recognised as such",
+                "Carrying significant responsibility and expectation",
+                "Working hard, often extending themselves to meet demand",
+                "Experiencing leadership as exposing, even when competent",
+                "Wanting to understand what is happening around them more clearly",
+                "Wanting to lead with greater certainty, without second-guessing themselves",
+              ].map((item) => (
+                <div key={item} className="bg-background p-6">
+                  <p className="text-muted-foreground">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* What This Programme Is (and Is Not) */}
+      <Section variant="offwhite">
         <Container>
           <div className="mx-auto max-w-3xl">
             <Heading as="h2">What This Programme Is — and Is Not</Heading>
@@ -101,8 +134,109 @@ export default function LeadershipProgrammePage() {
         </Container>
       </Section>
 
-      {/* Six-Month Journey */}
+      {/* What Begins to Change */}
+      <Section>
+        <Container>
+          <div className="mx-auto max-w-3xl">
+            <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-adi-green">
+              What Begins to Change
+            </p>
+            <Heading as="h2">A different experience of leadership</Heading>
+            <div className="mt-10 grid gap-8 md:grid-cols-2">
+              {[
+                { num: "01", text: "Greater clarity about your role, responsibility and position" },
+                { num: "02", text: "Reduced reactivity and more deliberate responses" },
+                { num: "03", text: "Increased confidence in your own judgement" },
+                { num: "04", text: "A clearer understanding of what is and is not about you" },
+                { num: "05", text: "Stronger boundaries and more sustainable ways of working" },
+                { num: "06", text: "An expanded sense of choice and possibility" },
+              ].map((item) => (
+                <div key={item.num} className="flex gap-4">
+                  <span className="font-[family-name:var(--font-cormorant)] text-4xl font-light text-adi-green/50">
+                    {item.num}
+                  </span>
+                  <p className="pt-2 text-muted-foreground">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* This Can Lead To */}
+      <Section variant="dark">
+        <Container>
+          <div className="mx-auto max-w-3xl">
+            <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-adi-green">
+              This Can Lead To
+            </p>
+            <Heading as="h2" className="text-white">
+              Leading with intention
+            </Heading>
+            <p className="mt-4 text-lg text-white/60">
+              As the programme progresses, participants find themselves leading
+              differently — with more presence, more confidence, and a clearer
+              sense of direction and choice.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {[
+                "Leading differently within current roles",
+                "Increased influence and presence",
+                "More confident decision-making",
+                "New opportunities from a place of clarity",
+              ].map((tag) => (
+                <span
+                  key={tag}
+                  className="border border-adi-green/30 px-4 py-2 text-sm uppercase tracking-wider text-adi-green"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Why This Programme Is Different */}
       <Section variant="offwhite">
+        <Container>
+          <div className="mx-auto max-w-3xl">
+            <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-adi-green">
+              Why This Programme Is Different
+            </p>
+            <div className="grid items-start gap-12 md:grid-cols-2">
+              <div>
+                <Heading as="h2">
+                  Not more tools. Deeper understanding.
+                </Heading>
+                <div className="mt-6 space-y-4 text-muted-foreground">
+                  <p>
+                    This programme does not focus on adding more tools or
+                    techniques. Instead, it focuses on how leaders interpret and
+                    respond to what is happening around them.
+                  </p>
+                  <p>
+                    It recognises that long-held beliefs about self can shape how
+                    leadership is experienced — particularly in environments
+                    where scrutiny and expectation are high.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <blockquote className="border-l-2 border-adi-green pl-6 font-[family-name:var(--font-cormorant)] text-xl font-light leading-relaxed">
+                  Understand the systems and dynamics you are operating within.
+                  Separate personal identity from external pressures. Reconnect
+                  with your own judgement and authority. Strengthen your ability
+                  to act with clarity and intention.
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Six-Month Journey */}
+      <Section>
         <Container>
           <div className="mx-auto max-w-3xl">
             <div className="text-center">

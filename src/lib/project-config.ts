@@ -2,7 +2,7 @@ export const projectConfig = {
   name: "African Development Institute",
   tagline: "From Surviving to Thriving",
   domain: process.env.NEXT_PUBLIC_DOMAIN || "localhost:3005",
-  supportEmail: "hello@africandevelopmentinstitute.org",
+  supportEmail: "hello@africandevelopmentinstitute.com",
   companyName: "Prospect Connect Media",
 
   features: {
