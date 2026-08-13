@@ -48,3 +48,7 @@ videos/node_modules/
 
 # Private
 invoices/
+
+# Playwright MCP
+.playwright-mcp/
+whatsapp-draft-pam.md
