@@ -6,6 +6,7 @@ const footerLinks = [
   { href: "/membership", label: "Membership" },
   { href: "/leadership-programme", label: "Leadership Programme" },
   { href: "/organisations", label: "Organisations" },
+  { href: "/events", label: "Events" },
   { href: "/contact", label: "Contact" },
 ];
 
