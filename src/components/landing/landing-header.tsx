@@ -25,10 +25,10 @@ export function LandingHeader() {
           <Image
             src="/logos/adi-logo-dark.svg"
             alt="African Development Institute"
-            width={180}
-            height={53}
+            width={758}
+            height={74}
             priority
-            className="h-10 w-auto"
+            className="h-6 w-auto md:h-7 lg:h-8"
           />
         </Link>
 

@@ -18,9 +18,9 @@ export function LandingFooter() {
             <Image
               src="/logos/adi-logo-dark.svg"
               alt="African Development Institute"
-              width={160}
-              height={47}
-              className="mb-4 h-9 w-auto"
+              width={758}
+              height={74}
+              className="mb-4 h-6 w-auto md:h-7"
             />
             <p className="max-w-sm text-sm text-white/60">
               A values-led developmental organisation for Black people in the UK.
