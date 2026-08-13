@@ -172,6 +172,12 @@ export default function MembershipPage() {
               <p className="mt-4 text-sm text-muted-foreground">
                 Flexible monthly commitment. Cancel anytime.
               </p>
+              <a
+                href="https://pay.africandevelopmentinstitute.com/secure-checkout-page-m2025"
+                className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-8 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+              >
+                Join Monthly
+              </a>
             </div>
             <div className="relative rounded-xl border-2 border-adi-green bg-card p-8 text-center">
               <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-adi-green px-4 py-1 text-xs font-semibold text-white">
@@ -187,6 +193,12 @@ export default function MembershipPage() {
               <p className="mt-4 text-sm text-muted-foreground">
                 Save over £85 per year. Full commitment, full access.
               </p>
+              <a
+                href="https://pay.africandevelopmentinstitute.com/secure-checkout-page-y2025"
+                className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-green px-8 text-sm font-semibold text-white transition-colors hover:bg-adi-green/90"
+              >
+                Join Annual
+              </a>
             </div>
           </div>
         </Container>
@@ -199,8 +211,8 @@ export default function MembershipPage() {
             <div className="text-center">
               <Heading as="h2">Register Your Interest</Heading>
               <p className="mt-4 text-muted-foreground">
-                Membership is opening soon. Leave your details and we&apos;ll be
-                in touch.
+                Prefer to talk it through first? Leave your details and
+                we&apos;ll be in touch.
               </p>
             </div>
             <div className="mt-10">
