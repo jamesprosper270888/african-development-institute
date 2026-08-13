@@ -79,7 +79,7 @@ export async function POST(request: Request) {
     ].join("\n")
   );
 
-  forwardToGHL({ name, email, source: type, message });
+  await forwardToGHL({ name, email, source: type, message });
 
   return NextResponse.json({ success: true });
 }

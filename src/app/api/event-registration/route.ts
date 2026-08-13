@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     ].join("\n")
   );
 
-  forwardToGHL({ name, email, source: "event-registration", message });
+  await forwardToGHL({ name, email, source: "event-registration", message });
 
   return NextResponse.json({ success: true });
 }
