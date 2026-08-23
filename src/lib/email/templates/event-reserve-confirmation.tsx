@@ -49,6 +49,7 @@ export function EventReserveConfirmation({
                   {formatGBP(EVENT.pricing.earlyBird)} (standard price{" "}
                   {formatGBP(EVENT.pricing.standard)}), lunch included.
                 </Text>
+                {EVENT.tickets.earlyBirdReady ? (
                 <Button
                   href={EVENT.tickets.earlyBirdUrl}
                   style={{
@@ -61,6 +62,11 @@ export function EventReserveConfirmation({
                 >
                   Secure my seat — {formatGBP(EVENT.pricing.earlyBird)}
                 </Button>
+                ) : (
+                  <Text>
+                    We will send your payment link separately within 24 hours.
+                  </Text>
+                )}
                 <Text style={{ fontSize: 13, color: "#6b6560" }}>
                   We hold reservations for 48 hours. If you have questions,
                   just reply — Pam or Marcia will answer personally.

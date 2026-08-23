@@ -37,6 +37,9 @@ export const EVENT = {
   // TODO(James): create the £24.99 early-bird checkout in GHL and set its
   // thank-you redirect to `${APP_URL}/events/you-are-not-alone/thank-you?paid=1`.
   tickets: {
+    // Set true ONLY once the £24.99 page exists in GHL. Until then an unknown GHL
+    // page URL silently serves the membership checkout, so the button is hidden.
+    earlyBirdReady: false,
     earlyBirdUrl:
       "https://pay.africandevelopmentinstitute.com/you-are-not-alone-early-bird",
     standardUrl:

@@ -49,7 +49,9 @@ export default async function ThankYouPage({
                 ? `We will see you on ${EVENT.dateLong} at ${EVENT.venue.name}, ${EVENT.venue.town}. A confirmation is on its way to your inbox.`
                 : member
                   ? `We will confirm your membership and send the details a week before ${EVENT.dateShort}. Nothing to pay.`
-                  : `We are holding it for 48 hours. Make it yours now at the early-bird price.`}
+                  : EVENT.tickets.earlyBirdReady
+                    ? `We are holding it for 48 hours. Make it yours now at the early-bird price.`
+                    : `We are holding it at the early-bird price. Your payment link follows by email or WhatsApp.`}
             </p>
           </div>
         </Container>
@@ -72,15 +74,25 @@ export default async function ThankYouPage({
                 Lunch included. First {EVENT.pricing.earlyBirdSeats} seats or
                 until {EVENT.pricing.earlyBirdUntilLabel}.
               </p>
-              <a
-                href={EVENT.tickets.earlyBirdUrl}
-                className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
-              >
-                Secure my seat — {earlyBird}
-              </a>
-              <p className="mt-4 text-xs text-muted-foreground">
-                Secure card payment. You will be brought straight back here.
-              </p>
+              {EVENT.tickets.earlyBirdReady ? (
+                <>
+                  <a
+                    href={EVENT.tickets.earlyBirdUrl}
+                    className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+                  >
+                    Secure my seat — {earlyBird}
+                  </a>
+                  <p className="mt-4 text-xs text-muted-foreground">
+                    Secure card payment. You will be brought straight back here.
+                  </p>
+                </>
+              ) : (
+                <p className="mt-6 rounded-md bg-adi-green/10 p-4 text-sm leading-relaxed">
+                  <strong>Your early-bird price is locked in.</strong> We will
+                  send your payment link by email or WhatsApp within 24 hours
+                  &mdash; nothing more to do right now.
+                </p>
+              )}
             </div>
           </Container>
         </Section>
