@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   Calendar,
   Clock,
@@ -135,44 +136,62 @@ export default function YouAreNotAlonePage() {
   return (
     <>
       {/* Hero */}
-      <Section variant="dark" className="py-20 md:py-28">
+      <Section variant="dark" className="py-16 md:py-24">
         <Container>
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-adi-red">
-              {EVENT.tagline}
-            </p>
-            <Heading as="h1" className="mt-4 text-5xl md:text-6xl lg:text-7xl">
-              You Are Not Alone.
-            </Heading>
-            <p className="mx-auto mt-6 max-w-2xl text-xl leading-relaxed text-white/80">
-              One day to understand what is really happening, say it out loud
-              with people who get it, and leave with a plan and a community.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 text-white/80 sm:flex-row sm:gap-8">
-              <span className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-adi-green" />
-                {EVENT.dateLong}
-              </span>
-              <span className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-adi-green" />
-                {EVENT.time}
-              </span>
-              <span className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-adi-green" />
-                {EVENT.venue.name}, {EVENT.venue.town}
-              </span>
+          <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-adi-red">
+                {EVENT.tagline}
+              </p>
+              <Heading as="h1" className="mt-4 text-5xl md:text-6xl lg:text-7xl">
+                You Are Not Alone.
+              </Heading>
+              <p className="mt-6 max-w-xl text-xl leading-relaxed text-white/80">
+                One day to understand what is really happening, say it out loud
+                with people who get it, and leave with a plan and a community.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 text-white/80 sm:flex-row sm:flex-wrap sm:gap-x-8">
+                <span className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-adi-green" />
+                  {EVENT.dateLong}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-adi-green" />
+                  {EVENT.time}
+                </span>
+                <span className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-adi-green" />
+                  {EVENT.venue.name}, {EVENT.venue.town}
+                </span>
+              </div>
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                <TicketButton href="#reserve">Reserve my seat — free</TicketButton>
+                <TicketButton href="#tickets" variant="outline">
+                  Early bird {earlyBird} · {EVENT.seats} seats
+                </TicketButton>
+              </div>
+              <p className="mt-6 text-sm text-white/60">
+                Only {EVENT.seats} seats. Early bird ends{" "}
+                {EVENT.pricing.earlyBirdUntilLabel} or when the first{" "}
+                {EVENT.pricing.earlyBirdSeats} go.
+              </p>
             </div>
-            <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-              <TicketButton href="#reserve">Reserve my seat — free</TicketButton>
-              <TicketButton href="#tickets" variant="outline">
-                Early bird {earlyBird} · {EVENT.seats} seats
-              </TicketButton>
+            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+              <Image
+                src={`/events/${EVENT.slug}-hero.jpg`}
+                alt="A woman sitting alone on a late-evening train, looking out of the window"
+                width={928}
+                height={1152}
+                priority
+                sizes="(min-width: 1024px) 40vw, 90vw"
+                className="h-auto w-full rounded-lg object-cover"
+              />
+              <div
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-1.5 rounded-b-lg"
+                style={{ background: "linear-gradient(90deg,#C8102E 50%,#006B3F 50%)" }}
+              />
             </div>
-            <p className="mt-6 text-sm text-white/60">
-              Only {EVENT.seats} seats. Early bird ends{" "}
-              {EVENT.pricing.earlyBirdUntilLabel} or when the first{" "}
-              {EVENT.pricing.earlyBirdSeats} go.
-            </p>
           </div>
         </Container>
       </Section>
