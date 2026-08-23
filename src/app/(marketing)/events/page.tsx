@@ -4,11 +4,12 @@ import { Calendar, Clock, MapPin } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
+import { EVENT, eventPath, formatGBP } from "@/lib/event-config";
 
 export const metadata: Metadata = {
   title: "Events",
   description:
-    "Upcoming ADI gatherings — days of connection, reflection and growth for Black professionals and leaders in the UK.",
+    "ADI gatherings for Black professionals and leaders in the UK — a room where you do not have to explain the basics.",
 };
 
 export default function EventsPage() {
@@ -19,8 +20,8 @@ export default function EventsPage() {
           <div className="mx-auto max-w-3xl text-center">
             <Heading as="h1">Events</Heading>
             <p className="mt-6 text-lg text-white/80">
-              Regular gatherings — online and in person — for connection,
-              celebration and collective reflection.
+              Gatherings for Black professionals and leaders &mdash; in person
+              and online &mdash; where you do not have to explain the basics.
             </p>
           </div>
         </Container>
@@ -30,34 +31,33 @@ export default function EventsPage() {
         <Container>
           <div className="mx-auto max-w-2xl">
             <Link
-              href="/events/the-journey-within"
-              className="block rounded-xl border border-border bg-card p-8 transition-colors hover:border-adi-green"
+              href={eventPath()}
+              className="block rounded-xl border border-border bg-card p-8 transition-colors hover:border-adi-red"
             >
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-adi-red">
-                Next Event
+                Next gathering · {EVENT.seats} seats
               </p>
               <h2 className="mt-3 font-[family-name:var(--font-cormorant)] text-3xl font-semibold">
-                The Journey Within
+                {EVENT.name}.
               </h2>
-              <p className="mt-2 text-muted-foreground">
-                Real Stories. Real Growth. Real Change.
-              </p>
+              <p className="mt-2 text-muted-foreground">{EVENT.tagline}</p>
               <div className="mt-6 flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:gap-6">
                 <span className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-adi-green" />
-                  Sat 26 September 2026
+                  {EVENT.dateShort}
                 </span>
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-adi-green" />
-                  10:00am – 4:00pm
+                  {EVENT.time}
                 </span>
                 <span className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-adi-green" />
-                  Oatlands Park Hotel, Weybridge
+                  {EVENT.venue.name}, {EVENT.venue.town}
                 </span>
               </div>
               <p className="mt-6 text-sm font-semibold text-adi-green">
-                ADI members free · Guests £49.99 → Details &amp; tickets
+                Early bird {formatGBP(EVENT.pricing.earlyBird)} · ADI members
+                free &rarr; Details &amp; reserve
               </p>
             </Link>
           </div>

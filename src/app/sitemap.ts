@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/leadership-programme",
     "/organisations",
     "/contact",
+    "/events",
+    "/events/you-are-not-alone",
   ];
 
   return pages.map((path) => ({

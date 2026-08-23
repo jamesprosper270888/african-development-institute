@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import { GA4Script } from "@/components/analytics/ga4-script";
 import { ClarityScript } from "@/components/analytics/clarity-script";
+import { MetaPixel } from "@/components/analytics/meta-pixel";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -50,6 +51,7 @@ export default function RootLayout({
         <Toaster position="bottom-right" richColors />
         <GA4Script />
         <ClarityScript />
+        <MetaPixel />
       </body>
     </html>
   );

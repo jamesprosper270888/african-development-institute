@@ -11,6 +11,15 @@ const nextConfig: NextConfig = {
       "@react-email/components",
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/events/the-journey-within",
+        destination: "/events/you-are-not-alone",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
@@ -31,11 +40,11 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.clarity.ms",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.clarity.ms https://connect.facebook.net",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self'",
-              "connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://*.clarity.ms",
+              "connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://*.clarity.ms https://www.facebook.com https://connect.facebook.net",
               "frame-src 'none'",
             ].join("; "),
           },
