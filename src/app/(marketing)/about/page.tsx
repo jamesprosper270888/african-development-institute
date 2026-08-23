@@ -42,6 +42,10 @@ const founders = [
   },
 ];
 
+// Named testimonials about Pam and Marcia (from ADI's Dec 2025 bios doc).
+// Hidden until ADI confirms consent to publish; flip to true to show.
+const SHOW_TESTIMONIALS = false;
+
 const testimonials = [
   {
     quote: "Through her balance of lived experience, wisdom, challenge and support, she had a transformative impact on me. The most significant shift has been in my self-esteem. I had not realised how deeply some negative beliefs were embedded.",
@@ -209,6 +213,7 @@ export default function AboutPage() {
       </Section>
 
       {/* What leaders say */}
+      {SHOW_TESTIMONIALS ? (
       <Section variant="offwhite">
         <Container>
           <div className="mx-auto max-w-4xl">
@@ -232,6 +237,7 @@ export default function AboutPage() {
           </div>
         </Container>
       </Section>
+      ) : null}
 
       <CtaBanner
         heading="Want to know more?"
