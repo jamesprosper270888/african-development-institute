@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
@@ -18,6 +19,66 @@ const values = [
   "Opportunity without entitlement — Access is based on readiness, alignment and fit, not proximity or expectation.",
   "Stewardship over personality — ADI must be able to thrive beyond individual leaders while remaining true to its values.",
   "Integrity over scale — Growth must not erode relational depth, cultural integrity or purpose.",
+];
+
+const founders = [
+  {
+    name: "Pam Rowe",
+    role: "Co-Founder & Director",
+    photo: "/team/pam-rowe.jpg",
+    paragraphs: [
+      "Pam Rowe is a leadership adviser, facilitator and organisational development specialist with more than three decades of experience supporting senior leaders, boards and organisations to strengthen leadership, culture and decision-making in complex systems. Her work spans public services, safeguarding partnerships, education and community organisations across the UK.",
+      "An author, she co-founded ADI with a clear conviction that Black professionals deserve developmental spaces that recognise the realities they navigate. Through ADI she works with mid-to-senior leaders on identity-level leadership: distinguishing what belongs to them from what belongs to the systems they operate within, and developing the self-trust, steadiness and authority to lead well.",
+    ],
+  },
+  {
+    name: "Marcia Daigo",
+    role: "Co-Founder & Director",
+    photo: "/team/marcia-daigo.jpg",
+    paragraphs: [
+      "Marcia Daigo is an executive leadership coach, organisational development specialist and published author with over fifteen years' experience across the NHS, public sector and voluntary sector. She partners with senior leaders and leadership teams to navigate complexity, strengthen leadership identity and deliver sustainable organisational change.",
+      "Her coaching goes beyond confidence-building to identity-level development: helping leaders recognise the patterns in how they lead, navigate complex relational and organisational dynamics, and translate insight into purposeful, values-driven action within their systems.",
+    ],
+  },
+];
+
+const testimonials = [
+  {
+    quote: "Through her balance of lived experience, wisdom, challenge and support, she had a transformative impact on me. The most significant shift has been in my self-esteem. I had not realised how deeply some negative beliefs were embedded.",
+    name: "Georgia Chimbani",
+    title: "Corporate Director",
+    about: "Pam",
+  },
+  {
+    quote: "Marcia is very astute and quickly gets to the heart of issues. She encourages you to trust your instincts and recognise that you already hold the answers to the challenges and opportunities.",
+    name: "Meghan Zinkewich-Peotti",
+    title: "Head of Insight and Housing Strategy",
+    about: "Marcia",
+  },
+  {
+    quote: "Working with Pam has been a turning point in my leadership journey. I have refined my leadership style, strengthened my resilience, and gained greater clarity and confidence.",
+    name: "Manyara Walker",
+    title: "Senior Manager, Families First Lead",
+    about: "Pam",
+  },
+  {
+    quote: "Managers who went through the leadership programme said that for the first time in their careers they understood how to lead their staff.",
+    name: "Francesca Okosi",
+    title: "Executive Director, Workforce Transformation",
+    about: "Marcia",
+  },
+  {
+    quote: "Pam brings a steadiness and depth that makes even complex challenges feel workable. There is a real sense that progress is possible, whatever the starting point.",
+    name: "Ann Marie Dodds",
+    title: "Executive Director",
+    about: "Pam",
+  },
+  {
+    quote: "A person-centred approach that explores beyond the presenting issues, allowing you to develop your own insight. Relationships built on trust and respect that challenge and empower in equal measure.",
+    name: "Summer Macer",
+    title: "Chief of Staff",
+    about: "Marcia",
+  },
 ];
 
 export default function AboutPage() {
@@ -108,62 +169,65 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      {/* Founder */}
+      {/* Founders */}
       <Section>
         <Container>
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-4xl">
             <Heading as="h2">The Founders</Heading>
             <div className="mt-10 grid gap-8 md:grid-cols-2">
-              <div className="rounded-xl border border-border bg-card p-8">
-                <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
-                  Pam Rowe
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Co-Founder &amp; Director
-                  <br />
-                  African Development Institute
-                </p>
-                <p className="mt-4 leading-relaxed text-muted-foreground">
-                  Pam Rowe is a leadership development practitioner, facilitator,
-                  and community builder with decades of experience working at the
-                  intersection of personal development, organisational change, and
-                  racial equity. She founded ADI from a deep conviction that Black
-                  people in the UK deserve developmental spaces that honour their
-                  heritage, challenge them to grow, and refuse to compromise on
-                  values.
-                </p>
-                <p className="mt-4 leading-relaxed text-muted-foreground">
-                  Her work draws on a rich tradition of African-centred thought,
-                  systemic leadership practice, and a commitment to creating
-                  containers in which transformational work can happen.
-                </p>
-              </div>
-              <div className="rounded-xl border border-border bg-card p-8">
-                <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
-                  Marcia Daigo
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Co-Founder &amp; Director
-                  <br />
-                  African Development Institute
-                </p>
-                <p className="mt-4 leading-relaxed text-muted-foreground">
-                  Marcia Daigo is an executive coach, leadership development
-                  consultant, and organisational development specialist with over
-                  15 years of experience across the NHS, public sector, and
-                  voluntary organisations. She co-founded ADI from the conviction
-                  that lasting leadership is built on multiple levels —
-                  psychological, emotional, professional, and practical — and that
-                  Black people deserve developmental spaces where this depth of
-                  work is the starting point.
-                </p>
-                <p className="mt-4 leading-relaxed text-muted-foreground">
-                  Her practice combines values-driven leadership development with
-                  organisational insight, supporting individuals and teams to
-                  strengthen confidence, navigate complexity, and lead with
-                  clarity and accountability.
-                </p>
-              </div>
+              {founders.map((f) => (
+                <div key={f.name} className="rounded-xl border border-border bg-card p-8">
+                  <div className="flex items-center gap-5">
+                    <Image
+                      src={f.photo}
+                      alt={f.name}
+                      width={112}
+                      height={112}
+                      className="h-28 w-28 shrink-0 rounded-full object-cover ring-2 ring-adi-green/40"
+                    />
+                    <div>
+                      <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
+                        {f.name}
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {f.role}
+                        <br />
+                        African Development Institute
+                      </p>
+                    </div>
+                  </div>
+                  {f.paragraphs.map((para) => (
+                    <p key={para.slice(0, 24)} className="mt-4 leading-relaxed text-muted-foreground">
+                      {para}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* What leaders say */}
+      <Section variant="offwhite">
+        <Container>
+          <div className="mx-auto max-w-4xl">
+            <div className="text-center">
+              <Heading as="h2">What leaders say</Heading>
+              <p className="mt-4 text-lg text-muted-foreground">
+                From people who have worked with Pam and Marcia.
+              </p>
+            </div>
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
+              {testimonials.map((t) => (
+                <figure key={t.name} className="rounded-xl border border-border bg-card p-6">
+                  <blockquote className="leading-relaxed">&ldquo;{t.quote}&rdquo;</blockquote>
+                  <figcaption className="mt-4 text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">{t.name}</span>, {t.title}
+                    <span className="text-adi-green"> · on {t.about}</span>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           </div>
         </Container>

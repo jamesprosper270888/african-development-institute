@@ -297,14 +297,59 @@ export default function YouAreNotAlonePage() {
             {EVENT.hosts.map((h) => (
               <div
                 key={h.name}
-                className="rounded-xl border border-white/10 bg-white/5 p-7"
+                className="flex flex-col rounded-xl border border-white/10 bg-white/5 p-7"
               >
-                <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
-                  {h.name}
-                </h3>
-                <p className="mt-1 text-sm text-adi-green">{h.role}</p>
-                <p className="mt-4 leading-relaxed text-white/75">{h.bio}</p>
+                <div className="flex items-center gap-5">
+                  <Image
+                    src={h.photo}
+                    alt={h.name}
+                    width={96}
+                    height={96}
+                    className="h-24 w-24 shrink-0 rounded-full object-cover ring-2 ring-adi-green/60"
+                  />
+                  <div>
+                    <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
+                      {h.name}
+                    </h3>
+                    <p className="mt-1 text-sm text-adi-green">{h.role}</p>
+                  </div>
+                </div>
+                <p className="mt-5 leading-relaxed text-white/75">{h.bio}</p>
+                <figure className="mt-6 border-l-2 border-adi-red pl-4">
+                  <blockquote className="text-sm leading-relaxed text-white/80">
+                    &ldquo;{h.testimonial.quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-2 text-xs text-white/55">
+                    {h.testimonial.name}, {h.testimonial.title}
+                  </figcaption>
+                </figure>
               </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* What the day looks like */}
+      <Section>
+        <Container>
+          <div className="mx-auto max-w-3xl text-center">
+            <Heading as="h2">What the day looks like</Heading>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Not a conference. A room of twenty, round tables, two hosts who
+              ask the real questions. From a previous ADI gathering.
+            </p>
+          </div>
+          <div className="mx-auto mt-10 grid max-w-4xl grid-cols-3 gap-3 md:gap-5">
+            {EVENT.gallery.map((g) => (
+              <Image
+                key={g.src}
+                src={g.src}
+                alt={g.alt}
+                width={g.w}
+                height={g.h}
+                sizes="(min-width: 768px) 300px, 30vw"
+                className="aspect-[4/5] w-full rounded-lg object-cover"
+              />
             ))}
           </div>
         </Container>
