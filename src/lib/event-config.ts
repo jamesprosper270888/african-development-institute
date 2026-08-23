@@ -45,6 +45,7 @@ export const EVENT = {
   // Offer components — each can be switched off without touching the page.
   offer: {
     oneToOneFollowUp: true, // 30-min 1:1 with Pam or Marcia after the event (confirm Tue 25 Aug)
+    showTestimonials: false, // named quotes under the hosts — OFF until Pam/Marcia give permission
     moneyBackGuarantee: false, // "leave at lunch, full refund" — OFF until Pam/Marcia agree
   },
   hosts: [

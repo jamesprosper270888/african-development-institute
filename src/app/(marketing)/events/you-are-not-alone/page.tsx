@@ -315,6 +315,7 @@ export default function YouAreNotAlonePage() {
                   </div>
                 </div>
                 <p className="mt-5 leading-relaxed text-white/75">{h.bio}</p>
+                {EVENT.offer.showTestimonials ? (
                 <figure className="mt-6 border-l-2 border-adi-red pl-4">
                   <blockquote className="text-sm leading-relaxed text-white/80">
                     &ldquo;{h.testimonial.quote}&rdquo;
@@ -323,6 +324,7 @@ export default function YouAreNotAlonePage() {
                     {h.testimonial.name}, {h.testimonial.title}
                   </figcaption>
                 </figure>
+                ) : null}
               </div>
             ))}
           </div>
