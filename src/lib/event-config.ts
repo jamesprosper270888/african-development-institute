@@ -52,7 +52,7 @@ export const EVENT = {
       name: "Pam Rowe",
       role: "Co-founder, ADI · Leadership adviser and coach",
       photo: "/team/pam-rowe.jpg",
-      bio: "Thirty years advising senior leaders and boards across public services, safeguarding and education. Pam has sat with Black professionals at exactly this point — the appraisal that turns into an ambush, the restructure, the slow walk to the door — and she has been there herself.",
+      bio: "Thirty years advising senior leaders and boards across public services, safeguarding and education. Pam has sat with Black professionals at exactly this point — the ambush appraisal, the restructure, the slow walk to the door — and has been there herself.",
       testimonial: {
         quote: "Through her balance of lived experience, wisdom, challenge and support, she had a transformative impact on me. The most significant shift has been in my self-esteem.",
         name: "Georgia Chimbani",
@@ -63,7 +63,7 @@ export const EVENT = {
       name: "Marcia Daigo",
       role: "Co-founder, ADI · Executive coach and author",
       photo: "/team/marcia-daigo.jpg",
-      bio: "Executive coach and published author, fifteen years across the NHS and public sector. Marcia works with leaders who have done everything right and still find themselves squeezed: recognise the pattern, fortify yourself before you need to.",
+      bio: "Executive coach and published author, fifteen years across the NHS and public sector. Marcia works with leaders who have done everything right and still find themselves squeezed: name the pattern, fortify yourself before you need to, act on your own terms.",
       testimonial: {
         quote: "Marcia is very astute and quickly gets to the heart of issues. She encourages you to trust your instincts and recognise that you already hold the answers.",
         name: "Meghan Zinkewich-Peotti",

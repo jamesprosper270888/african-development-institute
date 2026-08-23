@@ -27,8 +27,8 @@ const founders = [
     role: "Co-Founder & Director",
     photo: "/team/pam-rowe.jpg",
     paragraphs: [
-      "Pam Rowe is a leadership adviser, facilitator and organisational development specialist with more than three decades of experience supporting senior leaders, boards and organisations to strengthen leadership, culture and decision-making in complex systems. Her work spans public services, safeguarding partnerships, education and community organisations across the UK.",
-      "An author, she co-founded ADI with a clear conviction that Black professionals deserve developmental spaces that recognise the realities they navigate. Through ADI she works with mid-to-senior leaders on identity-level leadership: distinguishing what belongs to them from what belongs to the systems they operate within, and developing the self-trust, steadiness and authority to lead well.",
+      "Pam Rowe is a leadership adviser, facilitator and organisational development specialist with more than three decades of experience supporting senior leaders, boards and organisations in complex systems, across public services, safeguarding partnerships, education and community organisations in the UK.",
+      "An author, she co-founded ADI with a clear conviction that Black professionals deserve developmental spaces that recognise the realities they navigate. She works with mid-to-senior leaders on identity-level leadership: distinguishing what belongs to them from what belongs to the system.",
     ],
   },
   {
@@ -37,7 +37,7 @@ const founders = [
     photo: "/team/marcia-daigo.jpg",
     paragraphs: [
       "Marcia Daigo is an executive leadership coach, organisational development specialist and published author with over fifteen years' experience across the NHS, public sector and voluntary sector. She partners with senior leaders and leadership teams to navigate complexity, strengthen leadership identity and deliver sustainable organisational change.",
-      "Her coaching goes beyond confidence-building to identity-level development: helping leaders recognise the patterns in how they lead, navigate complex relational and organisational dynamics, and translate insight into purposeful, values-driven action within their systems.",
+      "Her coaching goes beyond confidence-building to identity-level development: helping leaders recognise the patterns in how they lead, navigate complex relational and organisational dynamics, and translate insight into purposeful, values-driven action within their systems and their own lives.",
     ],
   },
 ];
