@@ -92,7 +92,9 @@ export function readAttribution(): Attribution {
     readCookie("_fbc") ||
     (fbclid ? `fb.1.${Date.now()}.${fbclid}` : undefined);
 
-  return {
+  // Only defined keys, so `{ ...remembered, ...readAttribution() }` never
+  // wipes a remembered value (e.g. the PCM click id) on a later page.
+  return stripUndefined({
     fbp: readCookie("_fbp"),
     fbc,
     pcmClickId: get("aff_sub", "pcm_click", "click_id"),
@@ -100,7 +102,7 @@ export function readAttribution(): Attribution {
     campaign: get("aff_sub3", "sub2", "camp", "utm_campaign"),
     ad: get("aff_sub4", "sub3", "ad", "utm_content", "utm_ad"),
     landingUrl: window.location.href,
-  };
+  }) as Attribution;
 }
 
 const STORAGE_KEY = "adi_attr";
