@@ -7,7 +7,7 @@ import {
   rememberAttribution,
   trackPixel,
 } from "@/components/analytics/meta-pixel";
-import { EVENT } from "@/lib/event-config";
+import { EVENT, currentTicketPrice } from "@/lib/event-config";
 
 const FIRED_KEY = "adi_purchase_fired";
 
@@ -37,7 +37,7 @@ export function PurchaseTracker({ paid }: { paid: boolean }) {
     trackPixel(
       "Purchase",
       {
-        value: EVENT.pricing.earlyBird,
+        value: currentTicketPrice(),
         currency: EVENT.pricing.currency,
         content_name: EVENT.name,
       },
@@ -47,11 +47,7 @@ export function PurchaseTracker({ paid }: { paid: boolean }) {
     fetch("/api/track/purchase", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        eventId,
-        value: EVENT.pricing.earlyBird,
-        attribution,
-      }),
+      body: JSON.stringify({ eventId, attribution }),
       keepalive: true,
     }).catch(() => {});
   }, [paid]);

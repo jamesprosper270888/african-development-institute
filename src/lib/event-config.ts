@@ -74,3 +74,11 @@ export function eventPath(sub: "" | "/thank-you" = ""): string {
 export function formatGBP(amount: number): string {
   return `£${amount.toFixed(2)}`;
 }
+
+/** Cookie set on a successful reservation; required to report a purchase. */
+export const LEAD_COOKIE = "adi_lead";
+
+/** Price the buyer pays right now (server-side, never trust the client). */
+export function currentTicketPrice(now: Date = new Date()): number {
+  return isEarlyBirdOpen(now) ? EVENT.pricing.earlyBird : EVENT.pricing.standard;
+}

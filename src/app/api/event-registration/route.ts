@@ -11,7 +11,7 @@ import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
 import { forwardToGHL } from "@/lib/ghl";
 import { sendMetaEvent } from "@/lib/meta-capi";
 import { postbackToPCM } from "@/lib/pcm-postback";
-import { EVENT, eventPath } from "@/lib/event-config";
+import { EVENT, eventPath, LEAD_COOKIE } from "@/lib/event-config";
 
 const attributionSchema = z
   .object({
@@ -177,5 +177,14 @@ export async function POST(request: Request) {
     }),
   ]);
 
-  return NextResponse.json({ success: true, id: row?.id ?? null });
+  const res = NextResponse.json({ success: true, id: row?.id ?? null });
+  // Lets the thank-you page report a purchase for this lead only (see /api/track/purchase)
+  res.cookies.set(LEAD_COOKIE, txnId, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 14,
+  });
+  return res;
 }

@@ -28,7 +28,6 @@ export async function postbackToPCM(input: {
     process.env.PCM_POSTBACK_URL ||
     "https://prospectconnectmedia.com/api/postback";
   const url = new URL(base);
-  url.searchParams.set("key", key);
   url.searchParams.set("click_id", input.clickId);
   url.searchParams.set("txn_id", input.txnId);
   url.searchParams.set("payout", input.payout.toFixed(2));
@@ -37,7 +36,10 @@ export async function postbackToPCM(input: {
   url.searchParams.set("network", "direct");
 
   try {
-    const res = await fetch(url.toString(), { method: "GET" });
+    const res = await fetch(url.toString(), {
+      method: "GET",
+      headers: { "X-Postback-Key": key },
+    });
     if (!res.ok) {
       console.error("[PCM] postback failed:", res.status, await res.text());
       return false;
