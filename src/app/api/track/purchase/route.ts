@@ -5,6 +5,11 @@ import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 import { sendMetaEvent } from "@/lib/meta-capi";
 import { postbackToPCM } from "@/lib/pcm-postback";
 import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
+import { db } from "@/lib/db";
+import { enquiries } from "@/lib/schema";
+import { eq } from "drizzle-orm";
+import { sendEmail, internalRecipients } from "@/lib/email/resend";
+import { EnquiryNotification } from "@/lib/email/templates/enquiry-notification";
 import {
   EVENT,
   eventPath,
@@ -58,7 +63,41 @@ export async function POST(request: Request) {
   const { eventId, attribution } = parsed.data;
   const value = currentTicketPrice();
 
+  // "PAID" notification to the internal inbox — replaces the GHL "Order Submitted"
+  // workflow. Best-effort: never blocks the tracking signals below.
+  const notifyPaid = async () => {
+    try {
+      const isUuid =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          leadId
+        );
+      const [row] = isUuid
+        ? await db
+            .select({ name: enquiries.name, email: enquiries.email })
+            .from(enquiries)
+            .where(eq(enquiries.id, leadId))
+            .limit(1)
+        : [];
+      const name = row?.name ?? "Unknown (lead " + leadId + ")";
+      const email = row?.email ?? "unknown";
+      await sendEmail({
+        to: internalRecipients(),
+        subject: `[ADI] PAID £${value.toFixed(2)}: ${name} — ${EVENT.name}`,
+        react: EnquiryNotification({
+          name,
+          email,
+          type: "ticket paid",
+          message: `Ticket purchased for ${EVENT.name} — £${value.toFixed(2)} (confirmed in GHL/Stripe).`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (err) {
+      console.error("[Purchase] PAID notification failed:", err);
+    }
+  };
+
   await Promise.all([
+    notifyPaid(),
     sendMetaEvent({
       eventName: "Purchase",
       eventId,

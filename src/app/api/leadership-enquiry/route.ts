@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 import { appendToSheet } from "@/lib/google-sheets";
-import { sendEmail } from "@/lib/email/resend";
+import { sendEmail, internalRecipients } from "@/lib/email/resend";
 import { EnquiryNotification } from "@/lib/email/templates/enquiry-notification";
 import { EnquiryConfirmation } from "@/lib/email/templates/enquiry-confirmation";
 import { db } from "@/lib/db";
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 
   // Send admin notification (high priority)
   await sendEmail({
-    to: process.env.EMAIL_FROM?.match(/<(.+)>/)?.[1] || "hello@africandevelopmentinstitute.com",
+    to: internalRecipients(),
     subject: `[ADI] LEADERSHIP ENQUIRY from ${name}`,
     react: EnquiryNotification({
       name,

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 import { appendToSheet } from "@/lib/google-sheets";
-import { sendEmail } from "@/lib/email/resend";
+import { sendEmail, internalRecipients } from "@/lib/email/resend";
 import { EnquiryNotification } from "@/lib/email/templates/enquiry-notification";
 import { EventReserveConfirmation } from "@/lib/email/templates/event-reserve-confirmation";
 import { db } from "@/lib/db";
@@ -102,12 +102,9 @@ export async function POST(request: Request) {
     ],
   ]);
 
-  const internalTo =
-    process.env.EMAIL_FROM?.match(/<(.+)>/)?.[1] ||
-    "hello@africandevelopmentinstitute.com";
-
+  // Internal notification (Pam/Marcia's inbox + James) — see NOTIFY_EMAILS
   await sendEmail({
-    to: internalTo,
+    to: internalRecipients(),
     subject: `[ADI] Seat reserved (${isMember ? "member" : "guest"}): ${name} — ${event}`,
     react: EnquiryNotification({
       name,
@@ -125,6 +122,7 @@ export async function POST(request: Request) {
       ? `Your seat at ${EVENT.name} — ${EVENT.dateShort}`
       : `Your seat is reserved — secure it at the early-bird price`,
     react: EventReserveConfirmation({ name, isMember }),
+    replyTo: process.env.REPLY_TO_EMAIL,
   });
 
   await sendTelegramNotification(
