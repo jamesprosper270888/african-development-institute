@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     `Type: ${kind}`,
     phone ? `Phone: ${phone}` : null,
     attrSummary ? `Source: ${attrSummary}` : null,
-    attribution?.pcmClickId ? `PCM click: ${attribution.pcmClickId}` : null,
+    attribution?.pcmClickId ? `Click ref: ${attribution.pcmClickId}` : null,
   ]
     .filter(Boolean)
     .join("\n");
@@ -82,6 +82,8 @@ export async function POST(request: Request) {
       email,
       type: "event",
       message,
+      phone: phone ?? null,
+      isMember,
       sourcePage:
         new URL(request.url).searchParams.get("source") ||
         attribution?.landingUrl ||

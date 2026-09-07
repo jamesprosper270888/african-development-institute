@@ -4,6 +4,7 @@ import {
   timestamp,
   uuid,
   boolean,
+  integer,
 } from "drizzle-orm/pg-core";
 
 // ─── BetterAuth tables (auto-managed, defined for Drizzle awareness) ────
@@ -88,6 +89,19 @@ export const enquiries = pgTable("enquiries", {
   status: text("status").notNull().default("new"),
   notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+
+  // ─── Event reservations (type = "event") ──────────────────────────────
+  // Added Sep 2026 so the reserve -> pay follow-up sequence has real columns
+  // to work from instead of parsing the free-text `message` blob.
+  phone: text("phone"),
+  isMember: boolean("is_member").notNull().default(false),
+  /** Set by /api/track/purchase when the ticket is paid. Null = still owing. */
+  paidAt: timestamp("paid_at"),
+  /** How many follow-up emails this reservation has had (0 = none yet). */
+  followUpStage: integer("follow_up_stage").notNull().default(0),
+  followUpLastAt: timestamp("follow_up_last_at"),
+  /** Set when they click "stop these reminders". Suppresses all follow-ups. */
+  unsubscribedAt: timestamp("unsubscribed_at"),
 });
 
 export const leadershipApplications = pgTable("leadership_applications", {

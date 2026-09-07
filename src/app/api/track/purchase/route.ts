@@ -80,6 +80,13 @@ export async function POST(request: Request) {
         : [];
       const name = row?.name ?? "Unknown (lead " + leadId + ")";
       const email = row?.email ?? "unknown";
+      // Stops the reserve -> pay follow-up sequence for this reservation.
+      if (isUuid) {
+        await db
+          .update(enquiries)
+          .set({ paidAt: new Date() })
+          .where(eq(enquiries.id, leadId));
+      }
       await sendEmail({
         to: internalRecipients(),
         subject: `[ADI] PAID £${value.toFixed(2)}: ${name} — ${EVENT.name}`,
