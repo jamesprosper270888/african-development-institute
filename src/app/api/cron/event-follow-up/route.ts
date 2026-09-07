@@ -14,6 +14,15 @@ export const maxDuration = 60;
 /** Reservations taken before this date belong to an older event. */
 const CAMPAIGN_START = new Date("2026-09-01T00:00:00Z");
 
+/** "tara.ashley.ifill@gmail.com" -> "t***l@gmail.com" */
+function mask(email: string): string {
+  const [local, domain] = email.split("@");
+  if (!domain) return "***";
+  const head = local.slice(0, 1);
+  const tail = local.length > 1 ? local.slice(-1) : "";
+  return `${head}***${tail}@${domain}`;
+}
+
 /**
  * Reserve -> pay follow-up. Runs on a Vercel cron (see vercel.json).
  *
@@ -24,9 +33,15 @@ const CAMPAIGN_START = new Date("2026-09-01T00:00:00Z");
  * `?dry=1` reports what it would send without sending or writing anything.
  */
 export async function GET(request: Request) {
+  // Fail CLOSED. An unset CRON_SECRET used to mean "allow everyone", which put
+  // reservers' email addresses behind a public GET (?dry=1 listed them). A cron
+  // that refuses to run until it is configured is the safer failure.
   const secret = process.env.CRON_SECRET;
-  const auth = request.headers.get("authorization");
-  if (secret && auth !== `Bearer ${secret}`) {
+  if (!secret) {
+    console.error("[follow-up] CRON_SECRET not set — refusing to run");
+    return NextResponse.json({ error: "Not configured" }, { status: 503 });
+  }
+  if (request.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -110,11 +125,13 @@ export async function GET(request: Request) {
     );
   }
 
+  // Addresses are masked even here: the Telegram ping (a private DM) carries the
+  // full address, so nothing needs a readable inbox in an HTTP response body.
   return NextResponse.json({
     ok: true,
     dry,
     candidates: candidates.length,
-    sent,
-    skipped,
+    sent: sent.map((s) => ({ email: mask(s.email), stage: s.stage })),
+    skipped: skipped.map((s) => ({ email: mask(s.email), reason: s.reason })),
   });
 }
