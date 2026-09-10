@@ -42,11 +42,13 @@ export const EVENT = {
     earlyBirdReady: true,
     earlyBirdUrl:
       "https://link.africandevelopmentinstitute.com/payment-link/6a8b0ff1f9c8c807930b9939",
-    // GHL Payment Link for the £49.99 standard ticket (redirects to /thank-you?paid=1).
-    // Until it exists, nothing links to a standard checkout and guests are told
-    // Pam or Marcia will take payment.
-    standardReady: false,
-    standardUrl: "",
+    // GHL Payment Link (product 6aa29874118a3782882c56c9, £49.99, created 10 Sep 2026,
+    // auto-deactivates 27 Sep 2026, redirects to /thank-you?paid=1). With standardReady
+    // false, nothing links to a standard checkout and guests are told Pam or Marcia
+    // will take payment.
+    standardReady: true,
+    standardUrl:
+      "https://link.africandevelopmentinstitute.com/payment-link/6aa299a4ceb12d9fc1a8c1dc",
   },
   // Offer components — each can be switched off without touching the page.
   offer: {
