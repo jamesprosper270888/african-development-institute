@@ -35,6 +35,9 @@ const ADS_DIR = new URL("../public/events/ads/", import.meta.url);
 const NEW_ADSET_NAME = "UK-Weybridge40km-London-25-60-Broad-from-14Sep";
 const NEW_START = "2026-09-14T00:00:00+0100";
 const LIVE_END = "2026-09-13T23:59:00+0100";
+// The live ad set's original end. Fixed here, not copied from it, because
+// --end-live moves that to 13 Sep and a later --build would inherit it.
+const NEW_END = "2026-09-25T23:59:00+0100";
 
 const BUILD = process.argv.includes("--build");
 const END_LIVE = process.argv.includes("--end-live");
@@ -77,11 +80,16 @@ const tagsFor = (ad) =>
 async function api(path, { method = "GET", params = {}, body } = {}) {
   const url = new URL(`${G}/${path}`);
   url.searchParams.set("access_token", TOKEN);
-  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, typeof v === "string" ? v : JSON.stringify(v));
+  // undefined would otherwise be sent as the literal string "undefined".
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined) url.searchParams.set(k, typeof v === "string" ? v : JSON.stringify(v));
+  }
   const init = { method };
   if (body) {
     const fd = new URLSearchParams();
-    for (const [k, v] of Object.entries(body)) fd.set(k, typeof v === "string" ? v : JSON.stringify(v));
+    for (const [k, v] of Object.entries(body)) {
+      if (v !== undefined) fd.set(k, typeof v === "string" ? v : JSON.stringify(v));
+    }
     init.body = fd;
   }
   const res = await fetch(url, init);
@@ -113,6 +121,12 @@ async function status() {
 // 0. Sanity: token, ad account, page
 const me = await api("me", { params: { fields: "id,name" } });
 log("token user:", me.name);
+// Stop before touching anything if the token was generated without a scope.
+const REQUIRED = ["ads_management", "ads_read", "business_management", "pages_show_list", "pages_read_engagement", "pages_manage_ads"];
+const granted = (await api("me/permissions")).data.filter((p) => p.status === "granted").map((p) => p.permission);
+const missing = REQUIRED.filter((p) => !granted.includes(p));
+if (missing.length) throw new Error(`token is missing ${missing.join(", ")}: regenerate it in Graph API Explorer`);
+log("permissions OK:", REQUIRED.join(", "));
 const acct = await api(ACT, { params: { fields: "name,account_status,currency,timezone_name" } });
 log("ad account:", acct.name, acct.currency, acct.timezone_name, "status", acct.account_status);
 if (acct.currency !== "GBP") throw new Error("expected GBP account");
@@ -124,13 +138,14 @@ const sets = await status();
 if (BUILD) {
   // 1. New ad set: an exact copy of the live one's delivery settings, scheduled.
   const live = await api(LIVE_ADSET_ID, {
-    params: { fields: "targeting,promoted_object,optimization_goal,billing_event,attribution_spec,destination_type,end_time" },
+    params: { fields: "targeting,promoted_object,optimization_goal,billing_event,attribution_spec,destination_type" },
   });
   let adset = sets.find((s) => s.name === NEW_ADSET_NAME);
   if (adset) {
     log("new adset exists, reusing:", adset.id);
   } else if (DRY) {
-    log("DRY: would create adset", NEW_ADSET_NAME, "start", NEW_START, "end", live.end_time, "targeting", JSON.stringify(live.targeting));
+    log("DRY: would create adset", NEW_ADSET_NAME, "start", NEW_START, "end", NEW_END);
+    log("DRY: copied from live:", JSON.stringify(live));
   } else {
     adset = await api(`${ACT}/adsets`, {
       method: "POST",
@@ -140,12 +155,13 @@ if (BUILD) {
         status: "ACTIVE",
         billing_event: live.billing_event,
         optimization_goal: live.optimization_goal,
-        promoted_object: live.promoted_object,
+        // Only what phase 1 set: the read also returns smart_pse_enabled, and
+        // destination_type reads back as "UNDEFINED" because it was never set.
+        promoted_object: { pixel_id: live.promoted_object.pixel_id, custom_event_type: live.promoted_object.custom_event_type },
         targeting: live.targeting,
         attribution_spec: live.attribution_spec,
-        ...(live.destination_type ? { destination_type: live.destination_type } : {}),
         start_time: NEW_START,
-        end_time: live.end_time,
+        end_time: NEW_END,
       },
     });
     log("adset created:", adset.id);
@@ -193,6 +209,17 @@ if (BUILD) {
 if (END_LIVE) {
   if (DRY) log("DRY: would set live adset", LIVE_ADSET_ID, "end_time", LIVE_END);
   else {
+    // Never end the live ad set unless the replacement holds all its ads, so
+    // Monday cannot start with nothing to deliver.
+    const next = (await api(`${CAMPAIGN_ID}/adsets`, { params: { fields: "id,name", limit: 25 } }))
+      .data.find((s) => s.name === NEW_ADSET_NAME);
+    const nextAds = next
+      ? (await api(`${next.id}/ads`, { params: { fields: "name,effective_status", limit: 25 } })).data
+      : [];
+    const usable = nextAds.filter((a) => a.effective_status !== "DISAPPROVED");
+    if (usable.length < ADS.length) {
+      throw new Error(`${NEW_ADSET_NAME} has ${usable.length}/${ADS.length} usable ads, so the live ad set was NOT ended`);
+    }
     await api(LIVE_ADSET_ID, { method: "POST", body: { end_time: LIVE_END } });
     log("live adset now ends", LIVE_END);
   }
