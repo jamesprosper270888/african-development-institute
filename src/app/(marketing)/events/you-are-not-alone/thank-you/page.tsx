@@ -3,7 +3,12 @@ import { Suspense } from "react";
 import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
-import { EVENT, formatGBP } from "@/lib/event-config";
+import {
+  EVENT,
+  formatGBP,
+  isEarlyBirdOpen,
+  ticketUrl,
+} from "@/lib/event-config";
 import { PurchaseTracker } from "./purchase-tracker";
 
 export const metadata: Metadata = {
@@ -24,6 +29,11 @@ export default async function ThankYouPage({
   const first = typeof params.n === "string" ? params.n : "";
   const earlyBird = formatGBP(EVENT.pricing.earlyBird);
   const standard = formatGBP(EVENT.pricing.standard);
+  // Decided per request (this page is dynamic): early bird until the
+  // deadline, standard after it. payUrl is null when that checkout is not live.
+  const earlyOpen = isEarlyBirdOpen();
+  const price = earlyOpen ? earlyBird : standard;
+  const payUrl = ticketUrl();
 
   return (
     <>
@@ -49,9 +59,13 @@ export default async function ThankYouPage({
                 ? `We will see you on ${EVENT.dateLong} at ${EVENT.venue.name}, ${EVENT.venue.town}. A confirmation is on its way to your inbox.`
                 : member
                   ? `We will confirm your membership and send the details a week before ${EVENT.dateShort}. Nothing to pay.`
-                  : EVENT.tickets.earlyBirdReady
-                    ? `We are holding it for 48 hours. Make it yours now at the early-bird price.`
-                    : `We are holding it at the early-bird price. Your payment link follows by email or WhatsApp.`}
+                  : earlyOpen
+                    ? payUrl
+                      ? `We are holding it for 48 hours. Make it yours now at the early-bird price.`
+                      : `We are holding it at the early-bird price. Your payment link follows by email or WhatsApp.`
+                    : payUrl
+                      ? `We are holding it for 48 hours. Make it yours now.`
+                      : `We are holding it for you. Pam or Marcia will be in touch to take payment.`}
             </p>
           </div>
         </Container>
@@ -62,25 +76,28 @@ export default async function ThankYouPage({
           <Container>
             <div className="mx-auto max-w-md rounded-xl border-2 border-adi-red bg-card p-8 text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
-                Early bird
+                {earlyOpen ? "Early bird" : "Your ticket"}
               </p>
               <div className="mt-4 flex items-baseline justify-center gap-2">
-                <span className="text-4xl font-bold">{earlyBird}</span>
-                <span className="text-lg text-muted-foreground line-through">
-                  {standard}
-                </span>
+                <span className="text-4xl font-bold">{price}</span>
+                {earlyOpen ? (
+                  <span className="text-lg text-muted-foreground line-through">
+                    {standard}
+                  </span>
+                ) : null}
               </div>
               <p className="mt-3 text-sm text-muted-foreground">
-                Lunch included. First {EVENT.pricing.earlyBirdSeats} seats or
-                until {EVENT.pricing.earlyBirdUntilLabel}.
+                {earlyOpen
+                  ? `Lunch included. First ${EVENT.pricing.earlyBirdSeats} seats or until ${EVENT.pricing.earlyBirdUntilLabel}.`
+                  : "Lunch and refreshments included."}
               </p>
-              {EVENT.tickets.earlyBirdReady ? (
+              {payUrl ? (
                 <>
                   <a
-                    href={EVENT.tickets.earlyBirdUrl}
+                    href={payUrl}
                     className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
                   >
-                    Secure my seat — {earlyBird}
+                    Secure my seat, {price}
                   </a>
                   <p className="mt-4 text-xs text-muted-foreground">
                     Secure card payment. You will be brought straight back here.
@@ -88,9 +105,18 @@ export default async function ThankYouPage({
                 </>
               ) : (
                 <p className="mt-6 rounded-md bg-adi-green/10 p-4 text-sm leading-relaxed">
-                  <strong>Your early-bird price is locked in.</strong> We will
-                  send your payment link by email or WhatsApp within 24 hours
-                  &mdash; nothing more to do right now.
+                  {earlyOpen ? (
+                    <>
+                      <strong>Your early-bird price is locked in.</strong> We
+                      will send your payment link by email or WhatsApp within
+                      24 hours. Nothing more to do right now.
+                    </>
+                  ) : (
+                    <>
+                      <strong>Your seat is held.</strong> Pam or Marcia will be
+                      in touch to take payment. Nothing more to do right now.
+                    </>
+                  )}
                 </p>
               )}
             </div>

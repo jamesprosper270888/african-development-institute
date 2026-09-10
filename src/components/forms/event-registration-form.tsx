@@ -22,9 +22,12 @@ import {
 export function EventRegistrationForm({
   event,
   thankYouPath,
+  earlyBirdOpen = true,
 }: {
   event: string;
   thankYouPath: string;
+  /** Decided by the server-rendered page, so the text matches the prices around it. */
+  earlyBirdOpen?: boolean;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -143,7 +146,7 @@ export function EventRegistrationForm({
       </Button>
       <p className="text-center text-xs text-muted-foreground">
         Reserving is free and takes 20 seconds. You will then be able to secure
-        your seat with the early-bird ticket.
+        your seat{earlyBirdOpen ? " with the early-bird ticket" : ""}.
       </p>
     </form>
   );

@@ -4,7 +4,11 @@ import { Calendar, Clock, MapPin } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
-import { EVENT, eventPath, formatGBP } from "@/lib/event-config";
+import { EVENT, eventPath, formatGBP, isEarlyBirdOpen } from "@/lib/event-config";
+
+// Same as the event page: the price line flips within a minute of the
+// early-bird deadline without a redeploy.
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Events",
@@ -13,6 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default function EventsPage() {
+  const price = isEarlyBirdOpen()
+    ? `Early bird ${formatGBP(EVENT.pricing.earlyBird)}`
+    : `Tickets ${formatGBP(EVENT.pricing.standard)}`;
+
   return (
     <>
       <Section variant="dark" className="py-20 md:py-28">
@@ -56,8 +64,7 @@ export default function EventsPage() {
                 </span>
               </div>
               <p className="mt-6 text-sm font-semibold text-adi-green">
-                Early bird {formatGBP(EVENT.pricing.earlyBird)} · ADI members
-                free &rarr; Details &amp; reserve
+                {price} · ADI members free &rarr; Details &amp; reserve
               </p>
             </Link>
           </div>

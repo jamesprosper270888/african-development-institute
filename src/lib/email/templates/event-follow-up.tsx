@@ -9,7 +9,13 @@ import {
   Button,
   Link,
 } from "@react-email/components";
-import { EVENT, formatGBP } from "@/lib/event-config";
+import {
+  EVENT,
+  formatGBP,
+  isEarlyBirdOpen,
+  standardTicketUrl,
+  ticketUrl,
+} from "@/lib/event-config";
 import type { FollowUpStage } from "@/lib/event-follow-up";
 
 const RED = "#C8102E";
@@ -24,23 +30,39 @@ export function EventFollowUp({
   name,
   stage,
   stopHref,
+  now = new Date(),
 }: {
   name: string;
   stage: FollowUpStage;
   stopHref: string;
+  /** Send time: stage 1 can go out either side of the early-bird deadline. */
+  now?: Date;
 }) {
   const firstName = name.trim().split(/\s+/)[0] || name;
   const early = formatGBP(EVENT.pricing.earlyBird);
   const standard = formatGBP(EVENT.pricing.standard);
+  const earlyOpen = isEarlyBirdOpen(now);
+
+  // Stages 2 and 3 only send before the deadline; 4 only after it; 1 either side.
+  const payUrl =
+    stage === 1
+      ? ticketUrl(now)
+      : stage === 4
+        ? standardTicketUrl()
+        : EVENT.tickets.earlyBirdReady
+          ? EVENT.tickets.earlyBirdUrl
+          : null;
 
   const body: Record<FollowUpStage, { lead: string; paras: string[]; cta: string }> = {
     1: {
       lead: `${firstName}, your seat is still held.`,
       paras: [
-        `You reserved a place at ${EVENT.name} on ${EVENT.dateLong} — one day in ${EVENT.venue.town} with ${EVENT.seats} other Black professionals who know exactly what you have been carrying.`,
-        `Reserving was free; securing it is ${early} while the early-bird places last (${standard} after). Lunch is included, and so is a 30-minute one-to-one with Pam or Marcia afterwards.`,
+        `You reserved a place at ${EVENT.name} on ${EVENT.dateLong}, one day in ${EVENT.venue.town} with ${EVENT.seats} other Black professionals who know exactly what you have been carrying.`,
+        earlyOpen
+          ? `Reserving was free; securing it is ${early} while the early-bird places last (${standard} after). Lunch is included, and so is a 30-minute one-to-one with Pam or Marcia afterwards.`
+          : `Reserving was free; securing it is ${standard}. Lunch is included, and so is a 30-minute one-to-one with Pam or Marcia afterwards.`,
       ],
-      cta: `Secure my seat — ${early}`,
+      cta: `Secure my seat, ${earlyOpen ? early : standard}`,
     },
     2: {
       lead: `${firstName}, early bird closes ${EVENT.pricing.earlyBirdUntilLabel}.`,
@@ -61,15 +83,16 @@ export function EventFollowUp({
     4: {
       lead: `${firstName}, there is still a seat for you.`,
       paras: [
-        `The early-bird window has closed, but ${EVENT.name} is still on — ${EVENT.dateLong}, ${EVENT.venue.name}, ${EVENT.venue.town} — and your reservation is still on our list.`,
-        `If you would like to keep it, just reply to this email and Pam or Marcia will sort the details with you directly. If the timing is wrong, reply and tell us that too; we would rather know.`,
+        `The early-bird window has closed, but ${EVENT.name} is still on: ${EVENT.dateLong}, ${EVENT.venue.name}, ${EVENT.venue.town}. Your reservation is still on our list.`,
+        payUrl
+          ? `If you would like to keep it, you can secure it below for ${standard}, or reply to this email and Pam or Marcia will sort the details with you directly. If the timing is wrong, reply and tell us that too; we would rather know.`
+          : `If you would like to keep it, just reply to this email and Pam or Marcia will sort the details with you directly. If the timing is wrong, reply and tell us that too; we would rather know.`,
       ],
-      cta: `Secure my seat — ${standard}`,
+      cta: `Secure my seat, ${standard}`,
     },
   };
 
   const content = body[stage];
-  const showButton = stage !== 4 && EVENT.tickets.earlyBirdReady;
 
   return (
     <Html>
@@ -83,9 +106,9 @@ export function EventFollowUp({
               <Text key={i}>{p}</Text>
             ))}
 
-            {showButton ? (
+            {payUrl ? (
               <Button
-                href={EVENT.tickets.earlyBirdUrl}
+                href={payUrl}
                 style={{
                   backgroundColor: RED,
                   color: "#ffffff",

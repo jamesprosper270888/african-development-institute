@@ -8,16 +8,28 @@ import {
   Hr,
   Button,
 } from "@react-email/components";
-import { EVENT, formatGBP } from "@/lib/event-config";
+import {
+  EVENT,
+  currentTicketPrice,
+  formatGBP,
+  isEarlyBirdOpen,
+  ticketUrl,
+} from "@/lib/event-config";
 
 export function EventReserveConfirmation({
   name,
   isMember,
+  now = new Date(),
 }: {
   name: string;
   isMember: boolean;
+  /** Send time: decides early-bird or standard wording, price and link. */
+  now?: Date;
 }) {
   const firstName = name.trim().split(/\s+/)[0] || name;
+  const earlyOpen = isEarlyBirdOpen(now);
+  const price = formatGBP(currentTicketPrice(now));
+  const payUrl = ticketUrl(now);
 
   return (
     <Html>
@@ -44,14 +56,23 @@ export function EventReserveConfirmation({
             ) : (
               <>
                 <Text>
-                  To make it yours, secure the early-bird ticket — only{" "}
-                  {EVENT.pricing.earlyBirdSeats} are available at{" "}
-                  {formatGBP(EVENT.pricing.earlyBird)} (standard price{" "}
-                  {formatGBP(EVENT.pricing.standard)}), lunch included.
+                  {earlyOpen ? (
+                    <>
+                      To make it yours, secure the early-bird ticket: only{" "}
+                      {EVENT.pricing.earlyBirdSeats} are available at{" "}
+                      {formatGBP(EVENT.pricing.earlyBird)} (standard price{" "}
+                      {formatGBP(EVENT.pricing.standard)}), lunch included.
+                    </>
+                  ) : (
+                    <>
+                      To make it yours, secure your ticket: {price}, lunch
+                      included.
+                    </>
+                  )}
                 </Text>
-                {EVENT.tickets.earlyBirdReady ? (
+                {payUrl ? (
                 <Button
-                  href={EVENT.tickets.earlyBirdUrl}
+                  href={payUrl}
                   style={{
                     backgroundColor: "#C8102E",
                     color: "#ffffff",
@@ -60,7 +81,7 @@ export function EventReserveConfirmation({
                     fontWeight: 600,
                   }}
                 >
-                  Secure my seat — {formatGBP(EVENT.pricing.earlyBird)}
+                  Secure my seat, {price}
                 </Button>
                 ) : (
                   <Text>
@@ -69,7 +90,7 @@ export function EventReserveConfirmation({
                 )}
                 <Text style={{ fontSize: 13, color: "#6b6560" }}>
                   We hold reservations for 48 hours. If you have questions,
-                  just reply — Pam or Marcia will answer personally.
+                  just reply and Pam or Marcia will answer personally.
                 </Text>
               </>
             )}

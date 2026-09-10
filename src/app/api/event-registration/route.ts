@@ -11,7 +11,7 @@ import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
 import { forwardToGHL } from "@/lib/ghl";
 import { sendMetaEvent } from "@/lib/meta-capi";
 import { postbackToPCM } from "@/lib/pcm-postback";
-import { EVENT, eventPath, LEAD_COOKIE } from "@/lib/event-config";
+import { EVENT, eventPath, isEarlyBirdOpen, LEAD_COOKIE } from "@/lib/event-config";
 
 const attributionSchema = z
   .object({
@@ -117,12 +117,14 @@ export async function POST(request: Request) {
     }),
   });
 
-  // Registrant-facing confirmation with the early-bird link
+  // Registrant-facing confirmation with the pay link (early bird or standard, by date)
   await sendEmail({
     to: email,
     subject: isMember
       ? `Your seat at ${EVENT.name} — ${EVENT.dateShort}`
-      : `Your seat is reserved — secure it at the early-bird price`,
+      : isEarlyBirdOpen()
+        ? `Your seat is reserved: secure it at the early-bird price`
+        : `Your seat is reserved: here is how to secure it`,
     react: EventReserveConfirmation({ name, isMember }),
     replyTo: process.env.REPLY_TO_EMAIL,
   });

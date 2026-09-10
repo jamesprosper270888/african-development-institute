@@ -33,17 +33,20 @@ export const EVENT = {
     earlyBirdUntil: "2026-09-13T23:59:59+01:00",
     earlyBirdUntilLabel: "Sunday 13 September",
   },
-  // GoHighLevel-hosted checkout pages (Stripe connected inside GHL).
-  // TODO(James): create the £24.99 early-bird checkout in GHL and set its
-  // thank-you redirect to `${APP_URL}/events/you-are-not-alone/thank-you?paid=1`.
+  // GoHighLevel Payment Links (Stripe connected inside GHL). Both redirect to
+  // `${APP_URL}/events/you-are-not-alone/thank-you?paid=1` so the purchase is tracked.
+  // Use ticketUrl() rather than reading these directly: it picks the right one by date.
   tickets: {
     // GHL Payment Link (product 6a8b0a5fdc20627c4df323db, £24.99, stock 10,
     // auto-deactivates 14 Sep 2026, redirects to /thank-you?paid=1).
     earlyBirdReady: true,
     earlyBirdUrl:
       "https://link.africandevelopmentinstitute.com/payment-link/6a8b0ff1f9c8c807930b9939",
-    standardUrl:
-      "https://pay.africandevelopmentinstitute.com/journey-within-ticket",
+    // GHL Payment Link for the £49.99 standard ticket (redirects to /thank-you?paid=1).
+    // Until it exists, nothing links to a standard checkout and guests are told
+    // Pam or Marcia will take payment.
+    standardReady: false,
+    standardUrl: "",
   },
   // Offer components — each can be switched off without touching the page.
   offer: {
@@ -103,4 +106,23 @@ export const LEAD_COOKIE = "adi_lead";
 /** Price the buyer pays right now (server-side, never trust the client). */
 export function currentTicketPrice(now: Date = new Date()): number {
   return isEarlyBirdOpen(now) ? EVENT.pricing.earlyBird : EVENT.pricing.standard;
+}
+
+/** The standard-ticket checkout, or null until it has been set up in GHL. */
+export function standardTicketUrl(): string | null {
+  return EVENT.tickets.standardReady && EVENT.tickets.standardUrl
+    ? EVENT.tickets.standardUrl
+    : null;
+}
+
+/**
+ * Where "pay now" points right now, matching currentTicketPrice(): the
+ * early-bird link until the deadline, the standard link after it. Null when
+ * that checkout is not live, so callers fall back to "we will be in touch".
+ */
+export function ticketUrl(now: Date = new Date()): string | null {
+  if (isEarlyBirdOpen(now)) {
+    return EVENT.tickets.earlyBirdReady ? EVENT.tickets.earlyBirdUrl : null;
+  }
+  return standardTicketUrl();
 }

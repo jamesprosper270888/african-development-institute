@@ -27,7 +27,9 @@ SANS = os.path.join(FONTS, "arial.ttf")
 SANS_B = os.path.join(FONTS, "arialbd.ttf")
 
 KICKER = "An ADI gathering for Black professionals"
-FOOT = "Sat 26 Sep · Weybridge · 20 seats · Early bird £24.99"
+# Details line. Override with YANA_FOOT when the offer changes (the early bird
+# closes 13 Sep, and a creative that still says £24.99 after that is wrong).
+FOOT = os.environ.get("YANA_FOOT", "Sat 26 Sep · Weybridge · 20 seats · Early bird £24.99")
 DEFAULT_SUB = "One day to understand what's really happening,\nsay it out loud, and leave with a plan."
 SIZES = {"p45": (1080, 1350), "sq": (1080, 1080), "story": (1080, 1920)}
 

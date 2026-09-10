@@ -18,18 +18,33 @@ import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
 import { EventRegistrationForm } from "@/components/forms/event-registration-form";
-import { EVENT, eventPath, formatGBP } from "@/lib/event-config";
+import {
+  EVENT,
+  eventPath,
+  formatGBP,
+  isEarlyBirdOpen,
+  standardTicketUrl,
+} from "@/lib/event-config";
 
-export const metadata: Metadata = {
-  title: `${EVENT.name} — ${EVENT.tagline}`,
-  description: `${EVENT.dateLong}, ${EVENT.venue.name}, ${EVENT.venue.town}. One day to understand what is really happening, say it out loud with people who get it, and leave with a plan and a community. ${EVENT.seats} seats.`,
-  openGraph: {
-    title: `${EVENT.name} — ${EVENT.tagline}`,
-    description: `${EVENT.dateShort} · ${EVENT.venue.town} · ${EVENT.seats} seats · Early bird ${formatGBP(EVENT.pricing.earlyBird)}`,
-    images: [{ url: `/events/${EVENT.slug}-og.jpg`, width: 1200, height: 630 }],
-    type: "website",
-  },
-};
+// Re-rendered at most a minute after the early-bird deadline passes, so the
+// page switches to the standard price on its own, with no redeploy.
+export const revalidate = 60;
+
+export function generateMetadata(): Metadata {
+  const price = isEarlyBirdOpen()
+    ? `Early bird ${formatGBP(EVENT.pricing.earlyBird)}`
+    : `Tickets ${formatGBP(EVENT.pricing.standard)}`;
+  return {
+    title: `${EVENT.name}: ${EVENT.tagline}`,
+    description: `${EVENT.dateLong}, ${EVENT.venue.name}, ${EVENT.venue.town}. One day to understand what is really happening, say it out loud with people who get it, and leave with a plan and a community. ${EVENT.seats} seats.`,
+    openGraph: {
+      title: `${EVENT.name}: ${EVENT.tagline}`,
+      description: `${EVENT.dateShort} · ${EVENT.venue.town} · ${EVENT.seats} seats · ${price}`,
+      images: [{ url: `/events/${EVENT.slug}-og.jpg`, width: 1200, height: 630 }],
+      type: "website",
+    },
+  };
+}
 
 const situations = [
   {
@@ -132,6 +147,10 @@ function TicketButton({
 export default function YouAreNotAlonePage() {
   const earlyBird = formatGBP(EVENT.pricing.earlyBird);
   const standard = formatGBP(EVENT.pricing.standard);
+  // Checked at every regeneration (revalidate above): once the deadline has
+  // passed, every early-bird mention goes and the standard ticket is the offer.
+  const earlyOpen = isEarlyBirdOpen();
+  const standardUrl = standardTicketUrl();
 
   return (
     <>
@@ -167,13 +186,20 @@ export default function YouAreNotAlonePage() {
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <TicketButton href="#reserve">Reserve my seat — free</TicketButton>
                 <TicketButton href="#tickets" variant="outline">
-                  Early bird {earlyBird} · {EVENT.seats} seats
+                  {earlyOpen ? `Early bird ${earlyBird}` : `Tickets ${standard}`}{" "}
+                  · {EVENT.seats} seats
                 </TicketButton>
               </div>
               <p className="mt-6 text-sm text-white/60">
-                Only {EVENT.seats} seats. Early bird ends{" "}
-                {EVENT.pricing.earlyBirdUntilLabel} or when the first{" "}
-                {EVENT.pricing.earlyBirdSeats} go.
+                {earlyOpen ? (
+                  <>
+                    Only {EVENT.seats} seats. Early bird ends{" "}
+                    {EVENT.pricing.earlyBirdUntilLabel} or when the first{" "}
+                    {EVENT.pricing.earlyBirdSeats} go.
+                  </>
+                ) : (
+                  <>Only {EVENT.seats} seats. Lunch included, and reserving is free.</>
+                )}
               </p>
             </div>
             <div className="relative mx-auto w-full max-w-md lg:max-w-none">
@@ -366,45 +392,73 @@ export default function YouAreNotAlonePage() {
               {EVENT.seats} seats. Lunch and refreshments included.
             </p>
           </div>
-          <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-3">
-            <div className="rounded-xl border-2 border-adi-red bg-card p-8 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
-                Early bird
-              </p>
-              <div className="mt-4 flex items-baseline justify-center gap-2">
-                <span className="text-4xl font-bold">{earlyBird}</span>
-                <span className="text-lg text-muted-foreground line-through">
-                  {standard}
-                </span>
+          <div
+            className={`mx-auto mt-12 grid gap-6 ${earlyOpen ? "max-w-4xl md:grid-cols-3" : "max-w-3xl md:grid-cols-2"}`}
+          >
+            {earlyOpen ? (
+              <>
+                <div className="rounded-xl border-2 border-adi-red bg-card p-8 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
+                    Early bird
+                  </p>
+                  <div className="mt-4 flex items-baseline justify-center gap-2">
+                    <span className="text-4xl font-bold">{earlyBird}</span>
+                    <span className="text-lg text-muted-foreground line-through">
+                      {standard}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    First {EVENT.pricing.earlyBirdSeats} seats, or until{" "}
+                    {EVENT.pricing.earlyBirdUntilLabel}. Less than the lunch costs.
+                  </p>
+                  <a
+                    href="#reserve"
+                    className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+                  >
+                    Reserve, then pay {earlyBird}
+                  </a>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-8 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Standard
+                  </p>
+                  <div className="mt-4">
+                    <span className="text-4xl font-bold">{standard}</span>
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    After the early-bird seats are gone.
+                  </p>
+                  {/* Only once the £49.99 GHL link exists (tickets.standardReady). */}
+                  {standardUrl ? (
+                    <a
+                      href={standardUrl}
+                      className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md border border-border px-6 text-sm font-semibold transition-colors hover:bg-muted"
+                    >
+                      Buy standard ticket
+                    </a>
+                  ) : null}
+                </div>
+              </>
+            ) : (
+              <div className="rounded-xl border-2 border-adi-red bg-card p-8 text-center">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
+                  Ticket
+                </p>
+                <div className="mt-4">
+                  <span className="text-4xl font-bold">{standard}</span>
+                </div>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Reserve your seat free, then pay to make it yours. Lunch
+                  included.
+                </p>
+                <a
+                  href="#reserve"
+                  className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+                >
+                  Reserve, then pay {standard}
+                </a>
               </div>
-              <p className="mt-3 text-sm text-muted-foreground">
-                First {EVENT.pricing.earlyBirdSeats} seats, or until{" "}
-                {EVENT.pricing.earlyBirdUntilLabel}. Less than the lunch costs.
-              </p>
-              <a
-                href="#reserve"
-                className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
-              >
-                Reserve, then pay {earlyBird}
-              </a>
-            </div>
-            <div className="rounded-xl border border-border bg-card p-8 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Standard
-              </p>
-              <div className="mt-4">
-                <span className="text-4xl font-bold">{standard}</span>
-              </div>
-              <p className="mt-3 text-sm text-muted-foreground">
-                After the early-bird seats are gone.
-              </p>
-              <a
-                href={EVENT.tickets.standardUrl}
-                className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md border border-border px-6 text-sm font-semibold transition-colors hover:bg-muted"
-              >
-                Buy standard ticket
-              </a>
-            </div>
+            )}
             <div className="rounded-xl border border-adi-green bg-card p-8 text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-green">
                 ADI members
@@ -444,14 +498,16 @@ export default function YouAreNotAlonePage() {
             <div className="text-center">
               <Heading as="h2">Reserve your seat</Heading>
               <p className="mt-4 text-muted-foreground">
-                Free, 20 seconds. Guests can then secure the early-bird ticket;
-                members are confirmed by the team.
+                Free, 20 seconds. Guests can then secure{" "}
+                {earlyOpen ? "the early-bird ticket" : "their ticket"}; members
+                are confirmed by the team.
               </p>
             </div>
             <div className="mt-10">
               <EventRegistrationForm
                 event={`${EVENT.name} — ${EVENT.dateShort}`}
                 thankYouPath={eventPath("/thank-you")}
+                earlyBirdOpen={earlyOpen}
               />
             </div>
           </div>
