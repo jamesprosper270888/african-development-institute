@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { and, eq, gte, sql as dsql } from "drizzle-orm";
 import { z } from "zod/v4";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 import { appendToSheet } from "@/lib/google-sheets";
@@ -35,6 +36,9 @@ const registrationSchema = z.object({
   eventId: z.string().max(100).optional(),
   attribution: attributionSchema,
 });
+
+/** Reservations before this belong to an older event. Matches the cron. */
+const CAMPAIGN_START = new Date("2026-09-01T00:00:00Z");
 
 export async function POST(request: Request) {
   const ip = getClientIP(request);
@@ -74,6 +78,49 @@ export async function POST(request: Request) {
   ]
     .filter(Boolean)
     .join("\n");
+
+  // Duplicate guard. Someone submitted this form twice 95 seconds apart on
+  // 10 Sep and nothing stopped it, so they sat in the database twice and would
+  // have received every follow-up email twice. People double-submit when a page
+  // feels slow, and the rate limiter is per-IP, so it does not catch it.
+  //
+  // Treated as idempotent rather than rejected: the second submission returns
+  // the FIRST reservation's id and sets the same cookie, so the reserver still
+  // reaches the thank-you page and can still pay. Nothing is inserted, nobody
+  // is notified twice, and the Meta lead is not counted twice.
+  const normalisedEmail = email.trim().toLowerCase();
+  const [existing] = await db
+    // Only the existence of a row matters. Nothing from it is read back or
+    // returned, so there is nothing to leak.
+    .select({ id: enquiries.id })
+    .from(enquiries)
+    .where(
+      and(
+        eq(enquiries.type, "event"),
+        gte(enquiries.createdAt, CAMPAIGN_START),
+        dsql`lower(trim(${enquiries.email})) = ${normalisedEmail}`,
+        dsql`${enquiries.message} like ${`%${EVENT.name}%`}`
+      )
+    )
+    .limit(1);
+
+  if (existing) {
+    // Stop here, and deliberately do nothing else.
+    //
+    // An email address is not a secret, and nothing in this request proves the
+    // sender owns it. An earlier version of this guard patched the existing
+    // row and handed its id back in the lead cookie. That meant anyone who
+    // knew a reserver's address could flip them to a free member, overwrite
+    // the phone number Pam and Marcia call, and — because /api/track/purchase
+    // trusts that cookie to set paid_at — mark a stranger as paid without
+    // paying, firing a false Meta Purchase along the way.
+    //
+    // A genuine double-submit already holds the lead cookie from their first
+    // request, so there is nothing to re-issue. The response is identical to a
+    // fresh success, so this cannot be used to test whether an address has
+    // already reserved.
+    return NextResponse.json({ success: true });
+  }
 
   const [row] = await db
     .insert(enquiries)
@@ -179,7 +226,9 @@ export async function POST(request: Request) {
     }),
   ]);
 
-  const res = NextResponse.json({ success: true, id: row?.id ?? null });
+  // No id in the body: the client never used it, and a reservation id is the
+  // key /api/track/purchase trusts, so it does not belong in a response.
+  const res = NextResponse.json({ success: true });
   // Lets the thank-you page report a purchase for this lead only (see /api/track/purchase)
   res.cookies.set(LEAD_COOKIE, txnId, {
     httpOnly: true,
