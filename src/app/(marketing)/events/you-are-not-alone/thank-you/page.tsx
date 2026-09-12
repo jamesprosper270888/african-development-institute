@@ -7,6 +7,7 @@ import {
   EVENT,
   formatGBP,
   isEarlyBirdOpen,
+  pairTicketUrl,
   ticketUrl,
 } from "@/lib/event-config";
 import { PurchaseTracker } from "./purchase-tracker";
@@ -34,6 +35,9 @@ export default async function ThankYouPage({
   const earlyOpen = isEarlyBirdOpen();
   const price = earlyOpen ? earlyBird : standard;
   const payUrl = ticketUrl();
+  // Same price, two seats — live only once the early bird has closed.
+  const pairUrl = pairTicketUrl();
+  const pairOpen = pairUrl !== null;
 
   return (
     <>
@@ -56,7 +60,7 @@ export default async function ThankYouPage({
             </Heading>
             <p className="mt-6 text-lg text-white/80">
               {paid
-                ? `We will see you on ${EVENT.dateLong} at ${EVENT.venue.name}, ${EVENT.venue.town}. A confirmation is on its way to your inbox.`
+                ? `We will see you on ${EVENT.dateLong} at ${EVENT.venue.name}, ${EVENT.venue.town}. A confirmation is on its way to your inbox.${pairOpen ? " If you are bringing someone, reply to it with their name so we can set a place for them." : ""}`
                 : member
                   ? `We will confirm your membership and send the details a week before ${EVENT.dateShort}. Nothing to pay.`
                   : earlyOpen
@@ -76,7 +80,11 @@ export default async function ThankYouPage({
           <Container>
             <div className="mx-auto max-w-md rounded-xl border-2 border-adi-red bg-card p-8 text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
-                {earlyOpen ? "Early bird" : "Your ticket"}
+                {earlyOpen
+                  ? "Early bird"
+                  : pairOpen
+                    ? "Bring someone who gets it"
+                    : "Your ticket"}
               </p>
               <div className="mt-4 flex items-baseline justify-center gap-2">
                 <span className="text-4xl font-bold">{price}</span>
@@ -84,20 +92,26 @@ export default async function ThankYouPage({
                   <span className="text-lg text-muted-foreground line-through">
                     {standard}
                   </span>
+                ) : pairOpen ? (
+                  <span className="text-lg text-muted-foreground">for two</span>
                 ) : null}
               </div>
               <p className="mt-3 text-sm text-muted-foreground">
                 {earlyOpen
                   ? `Lunch included. First ${EVENT.pricing.earlyBirdSeats} seats or until ${EVENT.pricing.earlyBirdUntilLabel}.`
-                  : "Lunch and refreshments included."}
+                  : pairOpen
+                    ? `Your ticket brings two of you, ${EVENT.pricing.pairPerSeatLabel}, with lunch for both. Coming on your own is the same price, and plenty of people are.`
+                    : "Lunch and refreshments included."}
               </p>
               {payUrl ? (
                 <>
                   <a
-                    href={payUrl}
+                    href={pairOpen ? pairUrl : payUrl}
                     className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
                   >
-                    Secure my seat, {price}
+                    {pairOpen
+                      ? `Secure both seats, ${price}`
+                      : `Secure my seat, ${price}`}
                   </a>
                   <p className="mt-4 text-xs text-muted-foreground">
                     Secure card payment. You will be brought straight back here.

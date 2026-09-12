@@ -23,6 +23,7 @@ import {
   eventPath,
   formatGBP,
   isEarlyBirdOpen,
+  pairTicketUrl,
   standardTicketUrl,
 } from "@/lib/event-config";
 
@@ -151,6 +152,22 @@ export default function YouAreNotAlonePage() {
   // passed, every early-bird mention goes and the standard ticket is the offer.
   const earlyOpen = isEarlyBirdOpen();
   const standardUrl = standardTicketUrl();
+  // Null until the early bird closes, so this whole offer stays invisible
+  // until Monday without anyone having to deploy at midnight.
+  const pairUrl = pairTicketUrl();
+  const pairOpen = pairUrl !== null;
+  // The "can I bring someone" question only exists once the offer does, and it
+  // is the first thing anyone will ask, so it goes at the top rather than
+  // buried under the standing questions.
+  const pageFaqs = pairOpen
+    ? [
+        {
+          q: "Can I bring someone with me?",
+          a: `Yes, and it costs nothing extra. One ticket at ${standard} brings two of you, which works out at ${EVENT.pricing.pairPerSeatLabel}. Book as you normally would, then reply to your confirmation email with their name so we can set a place for them.`,
+        },
+        ...faqs,
+      ]
+    : faqs;
 
   return (
     <>
@@ -186,7 +203,11 @@ export default function YouAreNotAlonePage() {
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <TicketButton href="#reserve">Reserve my seat — free</TicketButton>
                 <TicketButton href="#tickets" variant="outline">
-                  {earlyOpen ? `Early bird ${earlyBird}` : `Tickets ${standard}`}{" "}
+                  {earlyOpen
+                    ? `Early bird ${earlyBird}`
+                    : pairOpen
+                      ? `Two seats ${standard}`
+                      : `Tickets ${standard}`}{" "}
                   · {EVENT.seats} seats
                 </TicketButton>
               </div>
@@ -196,6 +217,12 @@ export default function YouAreNotAlonePage() {
                     Only {EVENT.seats} seats. Early bird ends{" "}
                     {EVENT.pricing.earlyBirdUntilLabel} or when the first{" "}
                     {EVENT.pricing.earlyBirdSeats} go.
+                  </>
+                ) : pairOpen ? (
+                  <>
+                    Only {EVENT.seats} seats. Bring someone who gets it: two of
+                    you come for {standard},{" "}
+                    {EVENT.pricing.pairPerSeatLabel}. Reserving is free.
                   </>
                 ) : (
                   <>Only {EVENT.seats} seats. Lunch included, and reserving is free.</>
@@ -393,7 +420,7 @@ export default function YouAreNotAlonePage() {
             </p>
           </div>
           <div
-            className={`mx-auto mt-12 grid gap-6 ${earlyOpen ? "max-w-4xl md:grid-cols-3" : "max-w-3xl md:grid-cols-2"}`}
+            className={`mx-auto mt-12 grid gap-6 ${earlyOpen || pairOpen ? "max-w-4xl md:grid-cols-3" : "max-w-3xl md:grid-cols-2"}`}
           >
             {earlyOpen ? (
               <>
@@ -440,24 +467,56 @@ export default function YouAreNotAlonePage() {
                 </div>
               </>
             ) : (
-              <div className="rounded-xl border-2 border-adi-red bg-card p-8 text-center">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
-                  Ticket
-                </p>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">{standard}</span>
-                </div>
-                <p className="mt-3 text-sm text-muted-foreground">
-                  Reserve your seat free, then pay to make it yours. Lunch
-                  included.
-                </p>
-                <a
-                  href="#reserve"
-                  className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+              <>
+                {pairOpen ? (
+                  <div className="rounded-xl border-2 border-adi-red bg-card p-8 text-center">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
+                      Bring someone who gets it
+                    </p>
+                    <div className="mt-4 flex items-baseline justify-center gap-2">
+                      <span className="text-4xl font-bold">{standard}</span>
+                      <span className="text-lg text-muted-foreground">
+                        for two
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      Two seats for the price of one, so{" "}
+                      {EVENT.pricing.pairPerSeatLabel}. The hardest part of a
+                      day like this is walking in on your own, so bring the
+                      person you would have told about it afterwards.
+                    </p>
+                    <a
+                      href="#reserve"
+                      className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+                    >
+                      Reserve, then pay {standard} for two
+                    </a>
+                  </div>
+                ) : null}
+                <div
+                  className={`rounded-xl bg-card p-8 text-center ${pairOpen ? "border border-border" : "border-2 border-adi-red"}`}
                 >
-                  Reserve, then pay {standard}
-                </a>
-              </div>
+                  <p
+                    className={`text-xs font-semibold uppercase tracking-[0.2em] ${pairOpen ? "text-muted-foreground" : "text-adi-red"}`}
+                  >
+                    {pairOpen ? "Coming on your own" : "Ticket"}
+                  </p>
+                  <div className="mt-4">
+                    <span className="text-4xl font-bold">{standard}</span>
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    {pairOpen
+                      ? "One seat, the same price. Plenty of people are coming on their own, and you will not be the only one."
+                      : "Reserve your seat free, then pay to make it yours. Lunch included."}
+                  </p>
+                  <a
+                    href="#reserve"
+                    className={`mt-6 inline-flex h-12 w-full items-center justify-center rounded-md px-6 text-sm font-semibold transition-colors ${pairOpen ? "border border-border hover:bg-muted" : "bg-adi-red text-white hover:bg-adi-red/90"}`}
+                  >
+                    Reserve, then pay {standard}
+                  </a>
+                </div>
+              </>
             )}
             <div className="rounded-xl border border-adi-green bg-card p-8 text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-green">
@@ -547,7 +606,7 @@ export default function YouAreNotAlonePage() {
               <Heading as="h2">Questions</Heading>
             </div>
             <dl className="mt-10 space-y-6">
-              {faqs.map((f) => (
+              {pageFaqs.map((f) => (
                 <div key={f.q}>
                   <dt className="font-semibold">{f.q}</dt>
                   <dd className="mt-1 text-muted-foreground">{f.a}</dd>

@@ -32,6 +32,14 @@ export const EVENT = {
     earlyBirdSeats: 10,
     earlyBirdUntil: "2026-09-13T23:59:59+01:00",
     earlyBirdUntilLabel: "Sunday 13 September",
+    // "Bring someone who gets it": one standard price, two seats. Approved by
+    // Pam 11 Sep 2026 for the final two weeks. It is the same £49.99 either
+    // way, so nobody who books alone has overpaid; they simply did not bring
+    // anyone. Live automatically the minute the early bird closes. See
+    // pairTicketUrl(), which stays null until then so the offer cannot leak
+    // early and undercut the deadline.
+    pairSeats: 2,
+    pairPerSeatLabel: "£25 each",
   },
   // GoHighLevel Payment Links (Stripe connected inside GHL). Both redirect to
   // `${APP_URL}/events/you-are-not-alone/thank-you?paid=1` so the purchase is tracked.
@@ -49,6 +57,13 @@ export const EVENT = {
     standardReady: true,
     standardUrl:
       "https://link.africandevelopmentinstitute.com/payment-link/6aa299a4ceb12d9fc1a8c1dc",
+    // "Bring someone who gets it." A dedicated two-seat GHL link goes here if
+    // one is ever created (cleaner reporting: the product name says two).
+    // Left empty it falls back to standardUrl, which is correct rather than a
+    // compromise: the pair offer IS the standard price, so the same checkout
+    // sells it. That is why this offer needs no GHL work to go live Monday.
+    pairReady: true,
+    pairUrl: "",
   },
   // Offer components — each can be switched off without touching the page.
   offer: {
@@ -127,4 +142,20 @@ export function ticketUrl(now: Date = new Date()): string | null {
     return EVENT.tickets.earlyBirdReady ? EVENT.tickets.earlyBirdUrl : null;
   }
   return standardTicketUrl();
+}
+
+/**
+ * The "bring someone who gets it" checkout: one standard price, two seats.
+ *
+ * Null while the early bird is still open, and that is the point. Pam and
+ * Marcia were asked to keep the offer quiet until Sunday midnight, because an
+ * offer people can see coming kills the deadline they are being pushed
+ * towards. This function is what enforces that promise, so nothing has to be
+ * deployed or switched on at midnight: the page revalidates every 60 seconds
+ * and the offer appears on its own.
+ */
+export function pairTicketUrl(now: Date = new Date()): string | null {
+  if (isEarlyBirdOpen(now)) return null;
+  if (!EVENT.tickets.pairReady) return null;
+  return EVENT.tickets.pairUrl || standardTicketUrl();
 }

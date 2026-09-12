@@ -13,6 +13,7 @@ import {
   EVENT,
   formatGBP,
   isEarlyBirdOpen,
+  pairTicketUrl,
   standardTicketUrl,
   ticketUrl,
 } from "@/lib/event-config";
@@ -42,6 +43,10 @@ export function EventFollowUp({
   const early = formatGBP(EVENT.pricing.earlyBird);
   const standard = formatGBP(EVENT.pricing.standard);
   const earlyOpen = isEarlyBirdOpen(now);
+  // Stage 4 is the only one that sends after the deadline, so in practice this
+  // is true exactly when stage 4 goes out. Computed at send time, not build
+  // time, so Monday's email carries the offer without a redeploy.
+  const pairOpen = pairTicketUrl(now) !== null;
 
   // Stages 2 and 3 only send before the deadline; 4 only after it; 1 either side.
   const payUrl =
@@ -81,14 +86,23 @@ export function EventFollowUp({
       cta: `Secure my seat — ${early}`,
     },
     4: {
-      lead: `${firstName}, there is still a seat for you.`,
+      lead: pairOpen
+        ? `${firstName}, there is still a seat for you, and one for someone else.`
+        : `${firstName}, there is still a seat for you.`,
       paras: [
         `The early-bird window has closed, but ${EVENT.name} is still on: ${EVENT.dateLong}, ${EVENT.venue.name}, ${EVENT.venue.town}. Your reservation is still on our list.`,
+        ...(pairOpen
+          ? [
+              `A ticket is ${standard} now, and it brings two of you. Bring someone who gets it and that is ${EVENT.pricing.pairPerSeatLabel}, the same as the early bird. The hardest part of a day like this is walking in on your own, so bring the person you would have told about it afterwards.`,
+            ]
+          : []),
         payUrl
-          ? `If you would like to keep it, you can secure it below for ${standard}, or reply to this email and Pam or Marcia will sort the details with you directly. If the timing is wrong, reply and tell us that too; we would rather know.`
+          ? `If you would like to keep it, you can secure it below${pairOpen ? "" : ` for ${standard}`}, or reply to this email and Pam or Marcia will sort the details with you directly. If the timing is wrong, reply and tell us that too; we would rather know.`
           : `If you would like to keep it, just reply to this email and Pam or Marcia will sort the details with you directly. If the timing is wrong, reply and tell us that too; we would rather know.`,
       ],
-      cta: `Secure my seat, ${standard}`,
+      cta: pairOpen
+        ? `Secure both seats, ${standard}`
+        : `Secure my seat, ${standard}`,
     },
   };
 
