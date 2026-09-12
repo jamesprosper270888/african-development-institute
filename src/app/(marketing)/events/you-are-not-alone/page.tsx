@@ -616,13 +616,22 @@ export default function YouAreNotAlonePage() {
         <Container>
           <div className="mx-auto max-w-2xl">
             <div className="text-center">
-              <Heading as="h2">Questions</Heading>
+              <Heading as="h2">Frequently asked questions</Heading>
             </div>
-            <dl className="mt-10 space-y-6">
+            {/* White cards on the eggshell section. Deliberately not a real
+                accordion: every answer is short, and hiding them behind a
+                click only adds a step between a hesitant reader and the
+                reassurance they came for. */}
+            <dl className="mt-10 space-y-4">
               {pageFaqs.map((f) => (
-                <div key={f.q}>
-                  <dt className="font-semibold">{f.q}</dt>
-                  <dd className="mt-1 text-muted-foreground">{f.a}</dd>
+                <div
+                  key={f.q}
+                  className="rounded-xl border border-border bg-card p-6"
+                >
+                  <dt className="text-base font-semibold">{f.q}</dt>
+                  <dd className="mt-2 leading-relaxed text-muted-foreground">
+                    {f.a}
+                  </dd>
                 </div>
               ))}
             </dl>
