@@ -90,11 +90,9 @@ export async function POST(request: Request) {
   // is notified twice, and the Meta lead is not counted twice.
   const normalisedEmail = email.trim().toLowerCase();
   const [existing] = await db
-    .select({
-      id: enquiries.id,
-      phone: enquiries.phone,
-      isMember: enquiries.isMember,
-    })
+    // Only the existence of a row matters. Nothing from it is read back or
+    // returned, so there is nothing to leak.
+    .select({ id: enquiries.id })
     .from(enquiries)
     .where(
       and(
@@ -107,32 +105,21 @@ export async function POST(request: Request) {
     .limit(1);
 
   if (existing) {
-    // Carry across anything the second submission told us that the first did
-    // not. The member flag matters most: without it, someone who reserved as
-    // a guest and then resubmitted ticking "I am an ADI member" would be left
-    // flagged a guest and chased for payment on a seat that is free to them.
-    const patch: { phone?: string; isMember?: boolean } = {};
-    if (phone && !existing.phone) patch.phone = phone;
-    if (isMember && !existing.isMember) patch.isMember = true;
-    if (Object.keys(patch).length > 0) {
-      await db
-        .update(enquiries)
-        .set(patch)
-        .where(eq(enquiries.id, existing.id));
-    }
-    const dupRes = NextResponse.json({
-      success: true,
-      id: existing.id,
-      duplicate: true,
-    });
-    dupRes.cookies.set(LEAD_COOKIE, existing.id, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 14,
-    });
-    return dupRes;
+    // Stop here, and deliberately do nothing else.
+    //
+    // An email address is not a secret, and nothing in this request proves the
+    // sender owns it. An earlier version of this guard patched the existing
+    // row and handed its id back in the lead cookie. That meant anyone who
+    // knew a reserver's address could flip them to a free member, overwrite
+    // the phone number Pam and Marcia call, and — because /api/track/purchase
+    // trusts that cookie to set paid_at — mark a stranger as paid without
+    // paying, firing a false Meta Purchase along the way.
+    //
+    // A genuine double-submit already holds the lead cookie from their first
+    // request, so there is nothing to re-issue. The response is identical to a
+    // fresh success, so this cannot be used to test whether an address has
+    // already reserved.
+    return NextResponse.json({ success: true });
   }
 
   const [row] = await db
@@ -239,7 +226,9 @@ export async function POST(request: Request) {
     }),
   ]);
 
-  const res = NextResponse.json({ success: true, id: row?.id ?? null });
+  // No id in the body: the client never used it, and a reservation id is the
+  // key /api/track/purchase trusts, so it does not belong in a response.
+  const res = NextResponse.json({ success: true });
   // Lets the thank-you page report a purchase for this lead only (see /api/track/purchase)
   res.cookies.set(LEAD_COOKIE, txnId, {
     httpOnly: true,
