@@ -18,6 +18,10 @@ export const EVENT = {
     name: "Oatlands Park Hotel",
     address: "146 Oatlands Drive, Weybridge KT13 9HB",
     town: "Weybridge",
+    // Verified 12 Sep 2026: resolves to the hotel's own Google Maps place
+    // listing at 51.3750155, -0.4448101, not a search result, so it opens with
+    // directions and the venue's own photos rather than a guess.
+    mapsUrl: "https://maps.app.goo.gl/hKDL7Z3raLovvELy9",
     travel: [
       "25 minutes from London Waterloo to Weybridge station (South Western Railway)",
       "5 minutes by taxi from Weybridge station; free on-site parking",

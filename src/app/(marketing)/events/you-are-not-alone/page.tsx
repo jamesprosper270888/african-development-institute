@@ -585,6 +585,17 @@ export default function YouAreNotAlonePage() {
               <br />
               <span className="text-muted-foreground">{EVENT.venue.address}</span>
             </p>
+            {/* Most of this traffic is on a phone, where this opens the Maps
+                app straight onto the hotel with directions ready. */}
+            <a
+              href={EVENT.venue.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border px-6 text-sm font-semibold transition-colors hover:bg-muted"
+            >
+              <MapPin className="h-4 w-4 text-adi-green" />
+              Open in Google Maps
+            </a>
             <ul className="mx-auto mt-8 max-w-lg space-y-4 text-left text-base text-muted-foreground">
               {EVENT.venue.travel.map((t, i) => {
                 const Icon = i === 0 ? Train : i === 1 ? Car : UtensilsCrossed;
