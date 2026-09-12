@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { and, eq, gte, sql as dsql } from "drizzle-orm";
 import { z } from "zod/v4";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 import { appendToSheet } from "@/lib/google-sheets";
@@ -35,6 +36,9 @@ const registrationSchema = z.object({
   eventId: z.string().max(100).optional(),
   attribution: attributionSchema,
 });
+
+/** Reservations before this belong to an older event. Matches the cron. */
+const CAMPAIGN_START = new Date("2026-09-01T00:00:00Z");
 
 export async function POST(request: Request) {
   const ip = getClientIP(request);
@@ -74,6 +78,62 @@ export async function POST(request: Request) {
   ]
     .filter(Boolean)
     .join("\n");
+
+  // Duplicate guard. Someone submitted this form twice 95 seconds apart on
+  // 10 Sep and nothing stopped it, so they sat in the database twice and would
+  // have received every follow-up email twice. People double-submit when a page
+  // feels slow, and the rate limiter is per-IP, so it does not catch it.
+  //
+  // Treated as idempotent rather than rejected: the second submission returns
+  // the FIRST reservation's id and sets the same cookie, so the reserver still
+  // reaches the thank-you page and can still pay. Nothing is inserted, nobody
+  // is notified twice, and the Meta lead is not counted twice.
+  const normalisedEmail = email.trim().toLowerCase();
+  const [existing] = await db
+    .select({
+      id: enquiries.id,
+      phone: enquiries.phone,
+      isMember: enquiries.isMember,
+    })
+    .from(enquiries)
+    .where(
+      and(
+        eq(enquiries.type, "event"),
+        gte(enquiries.createdAt, CAMPAIGN_START),
+        dsql`lower(trim(${enquiries.email})) = ${normalisedEmail}`,
+        dsql`${enquiries.message} like ${`%${EVENT.name}%`}`
+      )
+    )
+    .limit(1);
+
+  if (existing) {
+    // Carry across anything the second submission told us that the first did
+    // not. The member flag matters most: without it, someone who reserved as
+    // a guest and then resubmitted ticking "I am an ADI member" would be left
+    // flagged a guest and chased for payment on a seat that is free to them.
+    const patch: { phone?: string; isMember?: boolean } = {};
+    if (phone && !existing.phone) patch.phone = phone;
+    if (isMember && !existing.isMember) patch.isMember = true;
+    if (Object.keys(patch).length > 0) {
+      await db
+        .update(enquiries)
+        .set(patch)
+        .where(eq(enquiries.id, existing.id));
+    }
+    const dupRes = NextResponse.json({
+      success: true,
+      id: existing.id,
+      duplicate: true,
+    });
+    dupRes.cookies.set(LEAD_COOKIE, existing.id, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 14,
+    });
+    return dupRes;
+  }
 
   const [row] = await db
     .insert(enquiries)

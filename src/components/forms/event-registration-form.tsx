@@ -88,19 +88,27 @@ export function EventRegistrationForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Sized up deliberately: this is the one form the whole campaign runs
+          through, and most of the traffic is on a phone. The shared Input is
+          h-8, which is fine for the admin screens but too small here. */}
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name" className="text-base">
+            Name
+          </Label>
           <Input
             id="name"
             name="name"
             required
             autoComplete="name"
             placeholder="Your name"
+            className="h-12 px-4 text-base"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email" className="text-base">
+            Email
+          </Label>
           <Input
             id="email"
             name="email"
@@ -108,11 +116,14 @@ export function EventRegistrationForm({
             required
             autoComplete="email"
             placeholder="you@example.com"
+            className="h-12 px-4 text-base"
           />
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="phone">Mobile number</Label>
+        <Label htmlFor="phone" className="text-base">
+          Mobile number
+        </Label>
         <Input
           id="phone"
           name="phone"
@@ -121,16 +132,17 @@ export function EventRegistrationForm({
           autoComplete="tel"
           inputMode="tel"
           placeholder="07xxx xxxxxx"
+          className="h-12 px-4 text-base"
         />
-        <p className="text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           So we can confirm your seat. No marketing calls.
         </p>
       </div>
-      <label className="flex cursor-pointer items-start gap-3 text-sm">
+      <label className="flex cursor-pointer items-start gap-3 text-base">
         <input
           type="checkbox"
           name="isMember"
-          className="mt-1 h-4 w-4 accent-adi-green"
+          className="mt-1 h-5 w-5 accent-adi-green"
         />
         <span className="text-muted-foreground">
           I am an ADI member (members attend free)

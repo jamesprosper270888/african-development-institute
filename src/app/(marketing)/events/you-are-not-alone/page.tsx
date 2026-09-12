@@ -553,10 +553,10 @@ export default function YouAreNotAlonePage() {
       {/* Reserve form */}
       <Section id="reserve">
         <Container>
-          <div className="mx-auto max-w-xl">
+          <div className="mx-auto max-w-2xl">
             <div className="text-center">
               <Heading as="h2">Reserve your seat</Heading>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-4 text-lg text-muted-foreground">
                 Free, 20 seconds. Guests can then secure{" "}
                 {earlyOpen ? "the early-bird ticket" : "their ticket"}; members
                 are confirmed by the team.
@@ -573,8 +573,10 @@ export default function YouAreNotAlonePage() {
         </Container>
       </Section>
 
-      {/* Venue */}
-      <Section variant="offwhite">
+      {/* Venue. White on purpose: it sits between two eggshell sections, so
+          this is the break that stops the lower half of the page reading as
+          one flat block. */}
+      <Section variant="white">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <Heading as="h2">Getting there</Heading>
@@ -583,7 +585,7 @@ export default function YouAreNotAlonePage() {
               <br />
               <span className="text-muted-foreground">{EVENT.venue.address}</span>
             </p>
-            <ul className="mx-auto mt-8 max-w-md space-y-3 text-left text-sm text-muted-foreground">
+            <ul className="mx-auto mt-8 max-w-lg space-y-4 text-left text-base text-muted-foreground">
               {EVENT.venue.travel.map((t, i) => {
                 const Icon = i === 0 ? Train : i === 1 ? Car : UtensilsCrossed;
                 return (
