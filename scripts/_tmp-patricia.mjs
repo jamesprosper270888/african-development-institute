@@ -100,8 +100,12 @@ if (fix) {
 // The cron's own candidate query. Everyone here gets an email at 10:00 UK.
 // Cross-check against GHL Transactions: anyone who paid inside GHL but closed
 // the tab early is in this list wrongly.
-console.log("\n=== 4. Everyone the cron will email next run ===");
-show(await sql`
+// NOTE: the cron's candidate query does NOT filter on follow_up_stage. It
+// selects on paid_at / unsubscribed_at and then calls dueStage() per row,
+// which returns null once stage >= 4. So a silenced duplicate still shows up
+// as a candidate while never receiving anything. Splitting the two here,
+// because lumping them together reads like the dedupe failed when it has not.
+const candidates = await sql`
   select name, email, is_member, paid_at, follow_up_stage, created_at
   from enquiries
   where type = 'event'
@@ -111,4 +115,14 @@ show(await sql`
     and created_at >= timestamp '2026-09-01 00:00:00'
     and message like '%You Are Not Alone%'
   order by created_at
-`);
+`;
+
+console.log("\n=== 4. WILL be emailed next run (stage < 4) ===");
+show(candidates.filter((r) => r.follow_up_stage < 4));
+
+const silenced = candidates.filter((r) => r.follow_up_stage >= 4);
+if (silenced.length > 0) {
+  console.log("\n=== 5. Silenced, will NEVER be emailed (stage 4) ===");
+  show(silenced);
+  console.log("  (these are deduped or finished rows. Correct, not a fault.)");
+}

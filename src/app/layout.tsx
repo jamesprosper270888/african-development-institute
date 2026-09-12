@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { Toaster } from "sonner";
-import { GA4Script } from "@/components/analytics/ga4-script";
-import { ClarityScript } from "@/components/analytics/clarity-script";
+import { CookieConsent } from "@/components/analytics/cookie-consent";
 import { MetaPixel } from "@/components/analytics/meta-pixel";
 import "./globals.css";
 
@@ -49,8 +48,9 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         {children}
         <Toaster position="bottom-right" richColors />
-        <GA4Script />
-        <ClarityScript />
+        {/* GA4 and Clarity are rendered inside CookieConsent and nowhere
+            else, so neither can run before someone has agreed. */}
+        <CookieConsent />
         <MetaPixel />
       </body>
     </html>

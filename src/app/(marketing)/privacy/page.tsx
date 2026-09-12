@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { CookieSettingsButton } from "@/components/analytics/cookie-consent";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -191,10 +192,45 @@ export default function PrivacyPage() {
           3. Do We Use Cookies and Other Tracking Technologies?
         </h2>
         <p className="mb-4 text-base leading-relaxed">
-          <strong>In Short:</strong> Yes, we use cookies and other tracking
-          technologies to enhance your experience. You can manage your cookie
-          preferences through your browser settings.
+          <strong>In Short:</strong> Yes, but anything that is not essential
+          stays switched off until you agree to it, and you can change your
+          mind at any time using the button at the end of this section.
         </p>
+
+        <h3 className="mt-6 mb-3 text-xl font-medium">Essential cookies</h3>
+        <p className="mb-4 text-base leading-relaxed">
+          These are needed for the site to work, so they are always on. They
+          keep you signed in if you have an account, remember that you reserved
+          a seat at an event so we can confirm your ticket, and remember the
+          cookie choice you make here so we do not keep asking you.
+        </p>
+
+        <h3 className="mt-6 mb-3 text-xl font-medium">
+          Analytics, only if you agree
+        </h3>
+        <p className="mb-4 text-base leading-relaxed">
+          If you say yes, we use Google Analytics and Microsoft Clarity to
+          understand how people find our pages and where they get stuck, so we
+          can make them better. Microsoft Clarity also records how a page is
+          used, such as scrolling and clicking. Neither of these loads at all
+          unless you agree, and if you say no they are never loaded.
+        </p>
+
+        <h3 className="mt-6 mb-3 text-xl font-medium">Advertising</h3>
+        <p className="mb-4 text-base leading-relaxed">
+          When we advertise an event, we use the Meta pixel to see which
+          adverts led to people reserving a seat. That is how we know whether a
+          small advertising budget is being spent sensibly rather than guessing.
+        </p>
+
+        <p className="mb-4 text-base leading-relaxed">
+          We do not sell your personal information, and we do not use any of
+          these tools to build a profile of you for someone else.
+        </p>
+
+        <div className="mb-4">
+          <CookieSettingsButton />
+        </div>
 
         {/* Section 4 */}
         <h2 id="social-logins" className="mt-10 mb-4 text-2xl font-semibold">

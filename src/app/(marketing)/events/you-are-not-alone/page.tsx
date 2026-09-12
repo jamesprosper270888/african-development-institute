@@ -138,7 +138,7 @@ function TicketButton({
   return (
     <a
       href={href}
-      className={`inline-flex h-12 items-center justify-center rounded-md px-8 text-sm font-semibold transition-colors ${styles}`}
+      className={`inline-flex h-12 items-center justify-center rounded-md px-8 text-base font-semibold transition-colors ${styles}`}
     >
       {children}
     </a>
@@ -201,7 +201,7 @@ export default function YouAreNotAlonePage() {
                 </span>
               </div>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <TicketButton href="#reserve">Reserve my seat — free</TicketButton>
+                <TicketButton href="#reserve">Reserve my seat, free</TicketButton>
                 <TicketButton href="#tickets" variant="outline">
                   {earlyOpen
                     ? `Early bird ${earlyBird}`
@@ -331,6 +331,12 @@ export default function YouAreNotAlonePage() {
                 </li>
               ))}
             </ul>
+            {/* The one CTA between the hero and the tickets. Five sections run
+                without anything to click, and this is the moment someone has
+                just recognised themselves in the list above. */}
+            <div className="mt-10 text-center">
+              <TicketButton href="#reserve">Reserve my seat, free</TicketButton>
+            </div>
           </div>
         </Container>
       </Section>
@@ -440,7 +446,7 @@ export default function YouAreNotAlonePage() {
                   </p>
                   <a
                     href="#reserve"
-                    className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+                    className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-base font-semibold text-white transition-colors hover:bg-adi-red/90"
                   >
                     Reserve, then pay {earlyBird}
                   </a>
@@ -459,7 +465,7 @@ export default function YouAreNotAlonePage() {
                   {standardUrl ? (
                     <a
                       href={standardUrl}
-                      className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md border border-border px-6 text-sm font-semibold transition-colors hover:bg-muted"
+                      className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md border border-border px-6 text-base font-semibold transition-colors hover:bg-muted"
                     >
                       Buy standard ticket
                     </a>
@@ -487,7 +493,7 @@ export default function YouAreNotAlonePage() {
                     </p>
                     <a
                       href="#reserve"
-                      className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
+                      className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-6 text-base font-semibold text-white transition-colors hover:bg-adi-red/90"
                     >
                       Reserve, then pay {standard} for two
                     </a>
@@ -511,7 +517,7 @@ export default function YouAreNotAlonePage() {
                   </p>
                   <a
                     href="#reserve"
-                    className={`mt-6 inline-flex h-12 w-full items-center justify-center rounded-md px-6 text-sm font-semibold transition-colors ${pairOpen ? "border border-border hover:bg-muted" : "bg-adi-red text-white hover:bg-adi-red/90"}`}
+                    className={`mt-6 inline-flex h-12 w-full items-center justify-center rounded-md px-6 text-base font-semibold transition-colors ${pairOpen ? "border border-border hover:bg-muted" : "bg-adi-red text-white hover:bg-adi-red/90"}`}
                   >
                     Reserve, then pay {standard}
                   </a>
@@ -531,7 +537,7 @@ export default function YouAreNotAlonePage() {
               </p>
               <a
                 href="#reserve"
-                className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-green px-6 text-sm font-semibold text-white transition-colors hover:bg-adi-green/90"
+                className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-green px-6 text-base font-semibold text-white transition-colors hover:bg-adi-green/90"
               >
                 Reserve free
               </a>
@@ -585,6 +591,17 @@ export default function YouAreNotAlonePage() {
               <br />
               <span className="text-muted-foreground">{EVENT.venue.address}</span>
             </p>
+            {/* Most of this traffic is on a phone, where this opens the Maps
+                app straight onto the hotel with directions ready. */}
+            <a
+              href={EVENT.venue.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-md border border-border px-6 text-base font-semibold transition-colors hover:bg-muted"
+            >
+              <MapPin className="h-4 w-4 text-adi-green" />
+              Open in Google Maps
+            </a>
             <ul className="mx-auto mt-8 max-w-lg space-y-4 text-left text-base text-muted-foreground">
               {EVENT.venue.travel.map((t, i) => {
                 const Icon = i === 0 ? Train : i === 1 ? Car : UtensilsCrossed;
@@ -605,18 +622,27 @@ export default function YouAreNotAlonePage() {
         <Container>
           <div className="mx-auto max-w-2xl">
             <div className="text-center">
-              <Heading as="h2">Questions</Heading>
+              <Heading as="h2">Frequently asked questions</Heading>
             </div>
-            <dl className="mt-10 space-y-6">
+            {/* White cards on the eggshell section. Deliberately not a real
+                accordion: every answer is short, and hiding them behind a
+                click only adds a step between a hesitant reader and the
+                reassurance they came for. */}
+            <dl className="mt-10 space-y-4">
               {pageFaqs.map((f) => (
-                <div key={f.q}>
-                  <dt className="font-semibold">{f.q}</dt>
-                  <dd className="mt-1 text-muted-foreground">{f.a}</dd>
+                <div
+                  key={f.q}
+                  className="rounded-xl border border-border bg-card p-6"
+                >
+                  <dt className="text-base font-semibold">{f.q}</dt>
+                  <dd className="mt-2 leading-relaxed text-muted-foreground">
+                    {f.a}
+                  </dd>
                 </div>
               ))}
             </dl>
             <div className="mt-12 text-center">
-              <TicketButton href="#reserve">Reserve my seat — free</TicketButton>
+              <TicketButton href="#reserve">Reserve my seat, free</TicketButton>
             </div>
           </div>
         </Container>
