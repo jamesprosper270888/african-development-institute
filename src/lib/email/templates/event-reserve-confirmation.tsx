@@ -13,6 +13,7 @@ import {
   currentTicketPrice,
   formatGBP,
   isEarlyBirdOpen,
+  pairTicketUrl,
   ticketUrl,
 } from "@/lib/event-config";
 
@@ -30,6 +31,7 @@ export function EventReserveConfirmation({
   const earlyOpen = isEarlyBirdOpen(now);
   const price = formatGBP(currentTicketPrice(now));
   const payUrl = ticketUrl(now);
+  const pairOpen = pairTicketUrl(now) !== null;
 
   return (
     <Html>
@@ -63,6 +65,12 @@ export function EventReserveConfirmation({
                       {formatGBP(EVENT.pricing.earlyBird)} (standard price{" "}
                       {formatGBP(EVENT.pricing.standard)}), lunch included.
                     </>
+                  ) : pairOpen ? (
+                    <>
+                      To make it yours, secure your ticket: {price}, lunch
+                      included. It brings two of you, so bring someone who gets
+                      it and it is {EVENT.pricing.pairPerSeatLabel}.
+                    </>
                   ) : (
                     <>
                       To make it yours, secure your ticket: {price}, lunch
@@ -81,7 +89,7 @@ export function EventReserveConfirmation({
                     fontWeight: 600,
                   }}
                 >
-                  Secure my seat, {price}
+                  {pairOpen ? `Secure our seats, ${price}` : `Secure my seat, ${price}`}
                 </Button>
                 ) : (
                   <Text>
