@@ -28,6 +28,20 @@ export const EVENT = {
       "Lunch and refreshments included with every ticket",
     ],
   },
+  // GOES TO 24 the moment tickets.pairUrl is filled in, and not before.
+  //
+  // The room at Oatlands Park holds 30. 20 was the number we chose, and by
+  // 13 Sep 16 were taken with 13 days still to run, so the pair offer is
+  // capped at four sales and 20 + 8 = 24 becomes the real ceiling. But 24 is
+  // only true while that cap exists: shipping it early would advertise seats
+  // we have no mechanism to stop selling. This number appears eleven times on
+  // the page, including "23 other people", so it has to describe what is
+  // actually on sale today.
+  //
+  // When it does change, the live ad copy still saying 20 is deliberate and
+  // must NOT be edited to match: an edit re-triggers Meta review, and a
+  // Scheduled ad stuck in review costs more than a stale number. Understating
+  // availability is the safe direction to be wrong in.
   seats: 20,
   pricing: {
     earlyBird: 24.99,
@@ -66,7 +80,22 @@ export const EVENT = {
     // Left empty it falls back to standardUrl, which is correct rather than a
     // compromise: the pair offer IS the standard price, so the same checkout
     // sells it. That is why this offer needs no GHL work to go live Monday.
-    pairReady: true,
+    // OFF deliberately, 13 Sep, and this is a one-line switch back on.
+    //
+    // Left true, the offer self-activated at midnight tonight with pairUrl
+    // empty, which falls back to standardUrl. That is the same £49.99
+    // transaction a solo buyer makes, so nothing could tell a pair sale from a
+    // single one and nothing could stop the fifth, sixth or seventh pair. With
+    // 16 of 20 seats already gone and ADI's own audience selling four in an
+    // afternoon, an uncapped two-for-one could have sold past the room
+    // overnight and left people turned away at the door.
+    //
+    // The cap belongs in GHL, not here: a dedicated two-seat product with
+    // stock 4, exactly as the early bird used stock 10. GHL then enforces it
+    // with no cron, no counter and no chance of a race. When that link exists,
+    // put it in pairUrl, set this back to true, set seats to 24, and deploy.
+    // Until then the offer simply does not appear.
+    pairReady: false,
     pairUrl: "",
   },
   // Offer components — each can be switched off without touching the page.

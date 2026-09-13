@@ -31,6 +31,12 @@ const LINKS: Record<string, string> = {
   li2: pcm("linkedin-organic", "li-bringsomeone"),
   fb2: pcm("fb-organic", "fb-bringsomeone"),
   grp2: pcm("fbgroup-organic", "grp-bringsomeone"),
+  // WhatsApp. Added 13 Sep after five people booked in a single day and four
+  // paid, none of them through a tracked link. A broadcast to people who
+  // already know ADI is the only thing that fits that pattern, and it was the
+  // one channel the original brief never covered. Its own src value, because
+  // if it really is outperforming the paid ads we need to be able to prove it.
+  wa: pcm("whatsapp-organic", "wa-bringsomeone"),
 };
 
 // Never cached. A stale redirect would be harmless here, since every slug
