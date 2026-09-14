@@ -113,6 +113,17 @@ export default async function ThankYouPage({
                       ? `Secure both seats, ${price}`
                       : `Secure my seat, ${price}`}
                   </a>
+                  {/* Pairs and single seats are separate GHL products, each
+                      with its own stock cap, so someone coming alone must get
+                      the single checkout rather than spend one of the pairs. */}
+                  {pairOpen ? (
+                    <a
+                      href={payUrl}
+                      className="mt-3 inline-flex h-12 w-full items-center justify-center rounded-md border border-border px-6 text-sm font-semibold transition-colors hover:bg-muted"
+                    >
+                      {`Just me, ${price}`}
+                    </a>
+                  ) : null}
                   <p className="mt-4 text-xs text-muted-foreground">
                     Secure card payment. You will be brought straight back here.
                   </p>

@@ -46,7 +46,11 @@ export function EventFollowUp({
   // Stage 4 is the only one that sends after the deadline, so in practice this
   // is true exactly when stage 4 goes out. Computed at send time, not build
   // time, so Monday's email carries the offer without a redeploy.
-  const pairOpen = pairTicketUrl(now) !== null;
+  const pairUrl = pairTicketUrl(now);
+  const pairOpen = pairUrl !== null;
+  // Only stage 4 sells the pair. Pairs and single seats are separate GHL
+  // products with their own stock caps, so each button must reach its own.
+  const pairHref = stage === 4 ? pairUrl : null;
 
   // Stages 2 and 3 only send before the deadline; 4 only after it; 1 either side.
   const payUrl =
@@ -122,7 +126,7 @@ export function EventFollowUp({
 
             {payUrl ? (
               <Button
-                href={payUrl}
+                href={pairHref ?? payUrl}
                 style={{
                   backgroundColor: RED,
                   color: "#ffffff",
@@ -133,6 +137,14 @@ export function EventFollowUp({
               >
                 {content.cta}
               </Button>
+            ) : null}
+            {payUrl && pairHref ? (
+              <Text style={{ fontSize: 14 }}>
+                Coming on your own?{" "}
+                <Link href={payUrl} style={{ color: RED }}>
+                  Secure one seat, {standard}
+                </Link>
+              </Text>
             ) : null}
 
             <Hr />

@@ -7,6 +7,7 @@ import {
   Text,
   Hr,
   Button,
+  Link,
 } from "@react-email/components";
 import {
   EVENT,
@@ -31,7 +32,10 @@ export function EventReserveConfirmation({
   const earlyOpen = isEarlyBirdOpen(now);
   const price = formatGBP(currentTicketPrice(now));
   const payUrl = ticketUrl(now);
-  const pairOpen = pairTicketUrl(now) !== null;
+  // Pairs and single seats are separate GHL products with their own stock
+  // caps, so the pair button and the single link must each reach their own.
+  const pairUrl = pairTicketUrl(now);
+  const pairOpen = pairUrl !== null;
 
   return (
     <Html>
@@ -79,8 +83,9 @@ export function EventReserveConfirmation({
                   )}
                 </Text>
                 {payUrl ? (
+                <>
                 <Button
-                  href={payUrl}
+                  href={pairUrl ?? payUrl}
                   style={{
                     backgroundColor: "#C8102E",
                     color: "#ffffff",
@@ -91,6 +96,15 @@ export function EventReserveConfirmation({
                 >
                   {pairOpen ? `Secure our seats, ${price}` : `Secure my seat, ${price}`}
                 </Button>
+                {pairUrl ? (
+                  <Text style={{ fontSize: 14 }}>
+                    Coming on your own?{" "}
+                    <Link href={payUrl} style={{ color: "#C8102E" }}>
+                      Secure one seat, {price}
+                    </Link>
+                  </Text>
+                ) : null}
+                </>
                 ) : (
                   <Text>
                     We will send your payment link separately within 24 hours.
