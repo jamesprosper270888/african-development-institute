@@ -28,21 +28,20 @@ export const EVENT = {
       "Lunch and refreshments included with every ticket",
     ],
   },
-  // GOES TO 24 the moment tickets.pairUrl is filled in, and not before.
+  // 24 since 14 Sep, when the GHL stock caps went in (see tickets below).
   //
   // The room at Oatlands Park holds 30. 20 was the number we chose, and by
   // 13 Sep 16 were taken with 13 days still to run, so the pair offer is
-  // capped at four sales and 20 + 8 = 24 becomes the real ceiling. But 24 is
-  // only true while that cap exists: shipping it early would advertise seats
-  // we have no mechanism to stop selling. This number appears eleven times on
-  // the page, including "23 other people", so it has to describe what is
-  // actually on sale today.
+  // capped at four sales and 20 + 8 = 24 becomes the real ceiling. 24 is only
+  // true while those caps exist: this number appears eleven times on the page,
+  // including "23 other people", so it has to describe what is actually on
+  // sale. Take the stock limits off in GHL and this goes back to 20.
   //
   // When it does change, the live ad copy still saying 20 is deliberate and
   // must NOT be edited to match: an edit re-triggers Meta review, and a
   // Scheduled ad stuck in review costs more than a stale number. Understating
   // availability is the safe direction to be wrong in.
-  seats: 20,
+  seats: 24,
   pricing: {
     earlyBird: 24.99,
     standard: 49.99,
@@ -75,28 +74,20 @@ export const EVENT = {
     standardReady: true,
     standardUrl:
       "https://link.africandevelopmentinstitute.com/payment-link/6aa299a4ceb12d9fc1a8c1dc",
-    // "Bring someone who gets it." A dedicated two-seat GHL link goes here if
-    // one is ever created (cleaner reporting: the product name says two).
-    // Left empty it falls back to standardUrl, which is correct rather than a
-    // compromise: the pair offer IS the standard price, so the same checkout
-    // sells it. That is why this offer needs no GHL work to go live Monday.
-    // OFF deliberately, 13 Sep, and this is a one-line switch back on.
+    // "Bring someone who gets it." GHL Payment Link (product
+    // 6aa7b61508d19fea442f815f "You Are Not Alone - Two Seats", £49.99,
+    // stock 4, created 14 Sep 2026, auto-deactivates 27 Sep 2026, redirects to
+    // /thank-you?paid=1).
     //
-    // Left true, the offer self-activated at midnight tonight with pairUrl
-    // empty, which falls back to standardUrl. That is the same £49.99
-    // transaction a solo buyer makes, so nothing could tell a pair sale from a
-    // single one and nothing could stop the fifth, sixth or seventh pair. With
-    // 16 of 20 seats already gone and ADI's own audience selling four in an
-    // afternoon, an uncapped two-for-one could have sold past the room
-    // overnight and left people turned away at the door.
-    //
-    // The cap belongs in GHL, not here: a dedicated two-seat product with
-    // stock 4, exactly as the early bird used stock 10. GHL then enforces it
-    // with no cron, no counter and no chance of a race. When that link exists,
-    // put it in pairUrl, set this back to true, set seats to 24, and deploy.
-    // Until then the offer simply does not appear.
-    pairReady: false,
-    pairUrl: "",
+    // It has its own product because a pair sale and a single sale are the
+    // same £49.99, so on the standard link nothing could tell them apart or
+    // stop the fifth pair. Stock 4 is the cap, enforced by GHL with no cron, no
+    // counter and no race, exactly as the early bird used stock 10. With
+    // pairUrl empty and pairReady true the offer falls back to standardUrl and
+    // runs uncapped, so never clear pairUrl without also setting this false.
+    pairReady: true,
+    pairUrl:
+      "https://link.africandevelopmentinstitute.com/payment-link/6aa7b78c32f95ae35594a744",
   },
   // Offer components — each can be switched off without touching the page.
   offer: {
