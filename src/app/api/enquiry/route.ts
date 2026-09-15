@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 import { z } from "zod/v4";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
+import { honeypotFilled } from "@/lib/honeypot";
 import { appendToSheet } from "@/lib/google-sheets";
 import { sendEmail, internalRecipients } from "@/lib/email/resend";
 import { EnquiryNotification } from "@/lib/email/templates/enquiry-notification";
@@ -18,6 +20,17 @@ const enquirySchema = z.object({
 });
 
 export async function POST(request: Request) {
+  // Bots were filling this form with made-up names and real strangers' email
+  // addresses, so ADI was emailing "thank you for contacting us" to people who
+  // never had. See src/instrumentation-client.ts.
+  const verification = await checkBotId();
+  if (verification.isBot) {
+    return NextResponse.json(
+      { error: "We could not send that. Please refresh the page and try again." },
+      { status: 403 }
+    );
+  }
+
   const ip = getClientIP(request);
   const { success } = checkRateLimit(ip);
   if (!success) {
@@ -28,6 +41,11 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
+  // A bot filled the hidden field. Report success so it has no reason to retry.
+  if (honeypotFilled(body)) {
+    return NextResponse.json({ success: true });
+  }
+
   const result = enquirySchema.safeParse(body);
 
   if (!result.success) {

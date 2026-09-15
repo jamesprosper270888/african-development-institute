@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withBotId } from "botid/next/config";
 
 const nextConfig: NextConfig = {
   images: {
@@ -45,7 +46,11 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: https:",
               "font-src 'self'",
               "connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://*.clarity.ms https://www.facebook.com https://connect.facebook.net",
-              "frame-src 'none'",
+              // 'self', not 'none': withBotId marks its own challenge path as
+              // frameable by this site only (X-Frame-Options SAMEORIGIN,
+              // frame-ancestors 'self'), and 'none' would block that frame
+              // too, failing real visitors. Outside sites still cannot frame us.
+              "frame-src 'self'",
             ].join("; "),
           },
         ],
@@ -54,4 +59,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBotId(nextConfig);

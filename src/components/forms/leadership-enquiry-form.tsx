@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { HoneypotField } from "@/components/forms/honeypot-field";
+import { HONEYPOT_FIELD } from "@/lib/honeypot";
 
 export function LeadershipEnquiryForm() {
   const [pending, setPending] = useState(false);
@@ -26,6 +28,7 @@ export function LeadershipEnquiryForm() {
           email: data.get("email"),
           roleOrg: data.get("roleOrg"),
           motivation: data.get("motivation"),
+          [HONEYPOT_FIELD]: data.get(HONEYPOT_FIELD),
         }),
       });
 
@@ -47,6 +50,7 @@ export function LeadershipEnquiryForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <HoneypotField />
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
