@@ -28,18 +28,6 @@ export default function ContactPage() {
             <div className="mt-12">
               <EnquiryForm type="general" showTypeSelector />
             </div>
-
-            <div className="mt-12 text-center">
-              <p className="text-sm text-muted-foreground">
-                You can also reach us directly at
-              </p>
-              <a
-                href="mailto:hello@africandevelopmentinstitute.com"
-                className="mt-1 inline-block font-medium text-adi-green transition-colors hover:text-adi-green/80"
-              >
-                hello@africandevelopmentinstitute.com
-              </a>
-            </div>
           </div>
         </Container>
       </Section>
