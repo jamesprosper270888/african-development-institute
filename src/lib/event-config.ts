@@ -28,27 +28,41 @@ export const EVENT = {
       "Lunch and refreshments included with every ticket",
     ],
   },
-  // 24 since 14 Sep, when the GHL stock caps went in (see tickets below).
+  // 30 since 20 Sep, the day the last-chance price went live (see pricing).
   //
-  // The room at Oatlands Park holds 30. 20 was the number we chose, and by
-  // 13 Sep 16 were taken with 13 days still to run, so the pair offer is
-  // capped at four sales and 20 + 8 = 24 becomes the real ceiling. 24 is only
-  // true while those caps exist: this number appears eleven times on the page,
-  // including "23 other people", so it has to describe what is actually on
-  // sale. Take the stock limits off in GHL and this goes back to 20.
+  // The room at Oatlands Park holds 30, and that is now the real ceiling. The
+  // pair and standard checkouts are DEACTIVATED in GHL, so the only way to buy
+  // is the last-chance link, whose stock is 15. Fifteen people are already
+  // committed (six members free plus ten paid, Ngozi is both), so 15 + 15 = 30
+  // exactly. Change that GHL stock and this number has to change with it: it
+  // appears eleven times on the page, including "29 other people", so it has
+  // to describe what is actually on sale.
   //
-  // When it does change, the live ad copy still saying 20 is deliberate and
-  // must NOT be edited to match: an edit re-triggers Meta review, and a
-  // Scheduled ad stuck in review costs more than a stale number. Understating
-  // availability is the safe direction to be wrong in.
-  seats: 24,
+  // The live ad copy still saying 20 is deliberate and must NOT be edited to
+  // match: an edit re-triggers Meta review, and a Scheduled ad stuck in review
+  // costs more than a stale number. Understating availability is the safe
+  // direction to be wrong in.
+  seats: 30,
   pricing: {
     earlyBird: 24.99,
     standard: 49.99,
     currency: "GBP",
-    earlyBirdSeats: 10,
-    earlyBirdUntil: "2026-09-13T23:59:59+01:00",
-    earlyBirdUntilLabel: "Sunday 13 September",
+    // REOPENED 20 Sep 2026 as the LAST CHANCE price. James's call.
+    //
+    // 49.99 ran from 14 to 20 Sep and sold nothing at all. Every one of the
+    // ten payments this campaign has taken was 24.99, the last of them on
+    // 13 Sep, and in the six days at the higher price seven guests reserved
+    // and not one paid. So the cheap tier is open again at the same 24.99,
+    // which also means nobody who already paid has paid more than anyone else.
+    //
+    // The machinery is deliberately unchanged: everything still reads
+    // isEarlyBirdOpen(), only the dates and the words move. Every user-facing
+    // string now says "last chance" rather than "early bird", because this
+    // list was emailed "early bird closes Sunday 13 September" and we are not
+    // reopening it under the same name.
+    earlyBirdSeats: 15,
+    earlyBirdUntil: "2026-09-25T23:59:59+01:00",
+    earlyBirdUntilLabel: "Friday 25 September",
     // "Bring someone who gets it": one standard price, two seats. Approved by
     // Pam 11 Sep 2026 for the final two weeks. It is the same £49.99 either
     // way, so nobody who books alone has overpaid; they simply did not bring
@@ -71,7 +85,10 @@ export const EVENT = {
     // auto-deactivates 27 Sep 2026, redirects to /thank-you?paid=1). With standardReady
     // false, nothing links to a standard checkout and guests are told Pam or Marcia
     // will take payment.
-    standardReady: true,
+    // FALSE since 20 Sep: the 49.99 link is deactivated in GHL, so nothing may
+    // point at it. The standard price still shows on the page as the
+    // struck-through comparison, which is all it is for now.
+    standardReady: false,
     standardUrl:
       "https://link.africandevelopmentinstitute.com/payment-link/6aa299a4ceb12d9fc1a8c1dc",
     // "Bring someone who gets it." GHL Payment Link (product
@@ -85,7 +102,11 @@ export const EVENT = {
     // counter and no race, exactly as the early bird used stock 10. With
     // pairUrl empty and pairReady true the offer falls back to standardUrl and
     // runs uncapped, so never clear pairUrl without also setting this false.
-    pairReady: true,
+    // FALSE since 20 Sep. At 24.99 for one seat, two seats for 49.99 is not an
+    // offer any more, it is the same money for less flexibility. Its GHL link
+    // is deactivated too, so its stock of 4 pairs can no longer sit outside
+    // the 15-seat cap and overfill the room.
+    pairReady: false,
     pairUrl:
       "https://link.africandevelopmentinstitute.com/payment-link/6aa7b78c32f95ae35594a744",
   },

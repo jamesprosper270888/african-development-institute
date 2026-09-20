@@ -25,7 +25,7 @@ export function EventReserveConfirmation({
 }: {
   name: string;
   isMember: boolean;
-  /** Send time: decides early-bird or standard wording, price and link. */
+  /** Send time: decides last-chance or standard wording, price and link. */
   now?: Date;
 }) {
   const firstName = name.trim().split(/\s+/)[0] || name;
@@ -64,10 +64,11 @@ export function EventReserveConfirmation({
                 <Text>
                   {earlyOpen ? (
                     <>
-                      To make it yours, secure the early-bird ticket: only{" "}
-                      {EVENT.pricing.earlyBirdSeats} are available at{" "}
-                      {formatGBP(EVENT.pricing.earlyBird)} (standard price{" "}
-                      {formatGBP(EVENT.pricing.standard)}), lunch included.
+                      To make it yours, secure the last-chance ticket:{" "}
+                      {formatGBP(EVENT.pricing.earlyBird)}, half the{" "}
+                      {formatGBP(EVENT.pricing.standard)} standard price, with
+                      only {EVENT.pricing.earlyBirdSeats} seats left and lunch
+                      included.
                     </>
                   ) : pairOpen ? (
                     <>

@@ -69,10 +69,28 @@ export async function GET(request: Request) {
       )
     );
 
+  // One person, one email. Maisie Barrett has sat in this table twice since
+  // 10 Sep, from before the form grew a duplicate guard, and the only thing
+  // stopping the second row sending was that the sequence topped out at stage
+  // 4 and both rows were parked there. Adding stage 5 on 20 Sep would have
+  // sent her the same email twice. Dedupe on the address itself rather than
+  // leaning on a ceiling to hide it. The earliest row wins: it is the one
+  // carrying the real follow-up history.
+  const byEmail = new Map<string, (typeof candidates)[number]>();
+  for (const row of candidates) {
+    const key = row.email.trim().toLowerCase();
+    const seen = byEmail.get(key);
+    if (!seen || new Date(row.createdAt) < new Date(seen.createdAt)) {
+      byEmail.set(key, row);
+    }
+  }
+  const unique = [...byEmail.values()];
+  const duplicates = candidates.length - unique.length;
+
   const sent: { email: string; stage: number }[] = [];
   const skipped: { email: string; reason: string }[] = [];
 
-  for (const row of candidates) {
+  for (const row of unique) {
     const stage = dueStage({
       createdAt: new Date(row.createdAt),
       followUpStage: row.followUpStage,
@@ -120,7 +138,7 @@ export async function GET(request: Request) {
         `📮 <b>ADI follow-up sent (${sent.length})</b>`,
         ...sent.map((s) => `• stage ${s.stage} → ${escapeHtml(s.email)}`),
         ``,
-        `${candidates.length} unpaid guest(s) in the sequence.`,
+        `${unique.length} unpaid guest(s) in the sequence.`,
       ].join("\n")
     );
   }
@@ -130,7 +148,8 @@ export async function GET(request: Request) {
   return NextResponse.json({
     ok: true,
     dry,
-    candidates: candidates.length,
+    candidates: unique.length,
+    duplicates,
     sent: sent.map((s) => ({ email: mask(s.email), stage: s.stage })),
     skipped: skipped.map((s) => ({ email: mask(s.email), reason: s.reason })),
   });

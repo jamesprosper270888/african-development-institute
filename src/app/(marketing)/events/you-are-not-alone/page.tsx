@@ -27,13 +27,13 @@ import {
   standardTicketUrl,
 } from "@/lib/event-config";
 
-// Re-rendered at most a minute after the early-bird deadline passes, so the
+// Re-rendered at most a minute after the last-chance deadline passes, so the
 // page switches to the standard price on its own, with no redeploy.
 export const revalidate = 60;
 
 export function generateMetadata(): Metadata {
   const price = isEarlyBirdOpen()
-    ? `Early bird ${formatGBP(EVENT.pricing.earlyBird)}`
+    ? `Last chance ${formatGBP(EVENT.pricing.earlyBird)}`
     : `Tickets ${formatGBP(EVENT.pricing.standard)}`;
   return {
     title: `${EVENT.name}: ${EVENT.tagline}`,
@@ -149,11 +149,12 @@ export default function YouAreNotAlonePage() {
   const earlyBird = formatGBP(EVENT.pricing.earlyBird);
   const standard = formatGBP(EVENT.pricing.standard);
   // Checked at every regeneration (revalidate above): once the deadline has
-  // passed, every early-bird mention goes and the standard ticket is the offer.
+  // passed, every last-chance mention goes and the standard ticket is the offer.
   const earlyOpen = isEarlyBirdOpen();
   const standardUrl = standardTicketUrl();
-  // Null until the early bird closes, so this whole offer stays invisible
-  // until Monday without anyone having to deploy at midnight.
+  // Always null since 20 Sep: pairReady is false and the pair's GHL link is
+  // deactivated, so the two-seat offer is off. Left wired up rather than
+  // ripped out, because turning it back on is one flag.
   const pairUrl = pairTicketUrl();
   const pairOpen = pairUrl !== null;
   // The "can I bring someone" question only exists once the offer does, and it
@@ -204,7 +205,7 @@ export default function YouAreNotAlonePage() {
                 <TicketButton href="#reserve">Reserve my seat, free</TicketButton>
                 <TicketButton href="#tickets" variant="outline">
                   {earlyOpen
-                    ? `Early bird ${earlyBird}`
+                    ? `Last chance ${earlyBird}`
                     : pairOpen
                       ? `Two seats ${standard}`
                       : `Tickets ${standard}`}{" "}
@@ -214,8 +215,8 @@ export default function YouAreNotAlonePage() {
               <p className="mt-6 text-sm text-white/60">
                 {earlyOpen ? (
                   <>
-                    Only {EVENT.seats} seats. Early bird ends{" "}
-                    {EVENT.pricing.earlyBirdUntilLabel} or when the first{" "}
+                    Only {EVENT.seats} seats. Half price until{" "}
+                    {EVENT.pricing.earlyBirdUntilLabel}, or until the last{" "}
                     {EVENT.pricing.earlyBirdSeats} go.
                   </>
                 ) : pairOpen ? (
@@ -432,7 +433,7 @@ export default function YouAreNotAlonePage() {
               <>
                 <div className="rounded-xl border-2 border-adi-red bg-card p-8 text-center">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-adi-red">
-                    Early bird
+                    Last chance, half price
                   </p>
                   <div className="mt-4 flex items-baseline justify-center gap-2">
                     <span className="text-4xl font-bold">{earlyBird}</span>
@@ -441,8 +442,10 @@ export default function YouAreNotAlonePage() {
                     </span>
                   </div>
                   <p className="mt-3 text-sm text-muted-foreground">
-                    First {EVENT.pricing.earlyBirdSeats} seats, or until{" "}
-                    {EVENT.pricing.earlyBirdUntilLabel}. Less than the lunch costs.
+                    Half the standard ticket, until{" "}
+                    {EVENT.pricing.earlyBirdUntilLabel} or until the last{" "}
+                    {EVENT.pricing.earlyBirdSeats} seats go. Less than the
+                    lunch costs.
                   </p>
                   <a
                     href="#reserve"
@@ -459,7 +462,7 @@ export default function YouAreNotAlonePage() {
                     <span className="text-4xl font-bold">{standard}</span>
                   </div>
                   <p className="mt-3 text-sm text-muted-foreground">
-                    After the early-bird seats are gone.
+                    What this ticket normally costs.
                   </p>
                   {/* Only once the £49.99 GHL link exists (tickets.standardReady). */}
                   {standardUrl ? (
@@ -564,7 +567,7 @@ export default function YouAreNotAlonePage() {
               <Heading as="h2">Reserve your seat</Heading>
               <p className="mt-4 text-lg text-muted-foreground">
                 Free, 20 seconds. Guests can then secure{" "}
-                {earlyOpen ? "the early-bird ticket" : "their ticket"}; members
+                {earlyOpen ? "the last-chance ticket" : "their ticket"}; members
                 are confirmed by the team.
               </p>
             </div>

@@ -5,23 +5,29 @@ import { EVENT } from "@/lib/event-config";
  * Reserve -> pay follow-up sequence.
  *
  * A guest reserves a seat for free, gets one confirmation email with the
- * early-bird payment button, and (until this existed) never heard from us
- * again. These are the nudges that follow, sent by /api/cron/event-follow-up.
+ * payment button, and (until this existed) never heard from us again. These
+ * are the nudges that follow, sent by /api/cron/event-follow-up.
  *
  * Rules:
  *  - members never enter the sequence (their seat is free)
  *  - anyone with paid_at set drops out immediately
  *  - one email per person per cron run, in order, never skipping ahead
  *  - everything stops after the event, or on unsubscribe
+ *
+ * Stage 5 was added on 20 Sep 2026 with the half-price last chance. Until
+ * then the sequence ended at 4, and `sent >= 4` returned null forever: five
+ * of the seven guests who had reserved and not paid were already parked
+ * there, and would never have been written to again whatever we changed.
  */
 
-export type FollowUpStage = 1 | 2 | 3 | 4;
+export type FollowUpStage = 1 | 2 | 3 | 4 | 5;
 
 export const STAGE_SUBJECTS: Record<FollowUpStage, string> = {
   1: "Your seat is still held — here is the link",
-  2: `Early bird closes ${EVENT.pricing.earlyBirdUntilLabel}`,
-  3: `Last day at ${money(EVENT.pricing.earlyBird)} — it is ${money(EVENT.pricing.standard)} tomorrow`,
+  2: `Last chance closes ${EVENT.pricing.earlyBirdUntilLabel}`,
+  3: `Today is the last day to book ${EVENT.name}`,
   4: `Still a seat for you on ${EVENT.dateShort}`,
+  5: `Your seat is still held, and it is back to ${money(EVENT.pricing.earlyBird)}`,
 };
 
 function money(n: number): string {
@@ -46,7 +52,7 @@ export function dueStage(input: {
 }): FollowUpStage | null {
   const now = input.now ?? new Date();
   const sent = input.followUpStage;
-  if (sent >= 4) return null;
+  if (sent >= 5) return null;
 
   // Never two emails in the same 18 hours, whatever the stage maths says.
   if (input.followUpLastAt && now.getTime() - input.followUpLastAt.getTime() < 18 * HOUR) {
@@ -65,6 +71,12 @@ export function dueStage(input: {
   if (hoursSinceReserved < 18) return null;
 
   if (sent < 1) return 1;
+
+  // Stage 5, the half-price last chance. It sits ahead of the branch below on
+  // purpose: the people who most need it are the ones who already reached
+  // stage 4 under the old sequence and stopped hearing from us, so they never
+  // learned the price came down. One email each, then they are done.
+  if (sent >= 4 && earlyBirdOpen) return 5;
 
   if (earlyBirdOpen) {
     // "closes Sunday" — once we are inside the last 4 days

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function EventsPage() {
   const price = isEarlyBirdOpen()
-    ? `Early bird ${formatGBP(EVENT.pricing.earlyBird)}`
+    ? `Last chance ${formatGBP(EVENT.pricing.earlyBird)}`
     : pairTicketUrl()
       ? `${formatGBP(EVENT.pricing.standard)} for two`
       : `Tickets ${formatGBP(EVENT.pricing.standard)}`;

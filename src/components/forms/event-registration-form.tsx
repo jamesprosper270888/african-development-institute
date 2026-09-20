@@ -158,7 +158,7 @@ export function EventRegistrationForm({
       </Button>
       <p className="text-center text-xs text-muted-foreground">
         Reserving is free and takes 20 seconds. You will then be able to secure
-        your seat{earlyBirdOpen ? " with the early-bird ticket" : ""}.
+        your seat{earlyBirdOpen ? " at the half-price last-chance rate" : ""}.
       </p>
     </form>
   );

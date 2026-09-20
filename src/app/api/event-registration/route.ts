@@ -164,13 +164,13 @@ export async function POST(request: Request) {
     }),
   });
 
-  // Registrant-facing confirmation with the pay link (early bird or standard, by date)
+  // Registrant-facing confirmation with the pay link (last chance or standard, by date)
   await sendEmail({
     to: email,
     subject: isMember
       ? `Your seat at ${EVENT.name} — ${EVENT.dateShort}`
       : isEarlyBirdOpen()
-        ? `Your seat is reserved: secure it at the early-bird price`
+        ? `Your seat is reserved: secure it at half price`
         : `Your seat is reserved: here is how to secure it`,
     react: EventReserveConfirmation({ name, isMember }),
     replyTo: process.env.REPLY_TO_EMAIL,

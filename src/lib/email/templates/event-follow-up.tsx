@@ -68,33 +68,33 @@ export function EventFollowUp({
       paras: [
         `You reserved a place at ${EVENT.name} on ${EVENT.dateLong}, one day in ${EVENT.venue.town} with ${EVENT.seats} other Black professionals who know exactly what you have been carrying.`,
         earlyOpen
-          ? `Reserving was free; securing it is ${early} while the early-bird places last (${standard} after). Lunch is included, and so is a 30-minute one-to-one with Pam or Marcia afterwards.`
+          ? `Reserving was free; securing it is ${early} until ${EVENT.pricing.earlyBirdUntilLabel}, half the ${standard} standard ticket. Lunch is included, and so is a 30-minute one-to-one with Pam or Marcia afterwards.`
           : `Reserving was free; securing it is ${standard}. Lunch is included, and so is a 30-minute one-to-one with Pam or Marcia afterwards.`,
       ],
       cta: `Secure my seat, ${earlyOpen ? early : standard}`,
     },
     2: {
-      lead: `${firstName}, early bird closes ${EVENT.pricing.earlyBirdUntilLabel}.`,
+      lead: `${firstName}, the last-chance price closes ${EVENT.pricing.earlyBirdUntilLabel}.`,
       paras: [
-        `Your seat at ${EVENT.name} is still held, and the ${early} early-bird price runs until ${EVENT.pricing.earlyBirdUntilLabel}. After that it is ${standard}.`,
-        `It is a small room by design — ${EVENT.seats} people, ${EVENT.dateLong}, ${EVENT.venue.name} in ${EVENT.venue.town}. If something is holding you back, reply to this email and tell us. Pam or Marcia will answer you personally.`,
+        `Your seat at ${EVENT.name} is still held, and the ${early} last-chance price runs until ${EVENT.pricing.earlyBirdUntilLabel}. That is half the ${standard} standard ticket.`,
+        `It is a small room by design: ${EVENT.seats} people, ${EVENT.dateLong}, ${EVENT.venue.name} in ${EVENT.venue.town}. If something is holding you back, reply to this email and tell us. Pam or Marcia will answer you personally.`,
       ],
-      cta: `Secure my seat — ${early}`,
+      cta: `Secure my seat, ${early}`,
     },
     3: {
-      lead: `${firstName}, today is the last day at ${early}.`,
+      lead: `${firstName}, today is the last day to book.`,
       paras: [
-        `The early-bird price for ${EVENT.name} ends tonight. From tomorrow the ticket is ${standard}.`,
-        `Nothing else changes — same day, same room, same ${EVENT.seats} seats. If you have been meaning to do this, today is the cheapest it will be.`,
+        `Booking for ${EVENT.name} closes tonight, because the day itself is tomorrow: ${EVENT.dateLong}, ${EVENT.venue.name} in ${EVENT.venue.town}.`,
+        `Nothing else changes, same room, same ${EVENT.seats} seats, lunch included, and it is still ${early}. If you have been meaning to do this, today is when it gets decided.`,
       ],
-      cta: `Secure my seat — ${early}`,
+      cta: `Secure my seat, ${early}`,
     },
     4: {
       lead: pairOpen
         ? `${firstName}, there is still a seat for you, and one for someone else.`
         : `${firstName}, there is still a seat for you.`,
       paras: [
-        `The early-bird window has closed, but ${EVENT.name} is still on: ${EVENT.dateLong}, ${EVENT.venue.name}, ${EVENT.venue.town}. Your reservation is still on our list.`,
+        `Booking has closed, but ${EVENT.name} is still on: ${EVENT.dateLong}, ${EVENT.venue.name}, ${EVENT.venue.town}. Your reservation is still on our list.`,
         ...(pairOpen
           ? [
               `A ticket is ${standard} now, and it brings two of you. Bring someone who gets it and that is ${EVENT.pricing.pairPerSeatLabel}, the same as the early bird. The hardest part of a day like this is walking in on your own, so bring the person you would have told about it afterwards.`,
@@ -107,6 +107,19 @@ export function EventFollowUp({
       cta: pairOpen
         ? `Secure both seats, ${standard}`
         : `Secure my seat, ${standard}`,
+    },
+    // Stage 5, 20 Sep 2026: the half-price last chance. This is the only
+    // email in the sequence that carries genuinely new information rather
+    // than a nudge, so it says plainly what changed and why, and it does not
+    // pretend the seat was ever going to sell itself at the standard price.
+    5: {
+      lead: `${firstName}, we have put the price back to ${early}.`,
+      paras: [
+        `Your seat at ${EVENT.name} is still on our list, and the ticket is ${early} again until ${EVENT.pricing.earlyBirdUntilLabel}. That is half the ${standard} standard price, and the same ${early} everyone else in the room has paid, so nobody there paid less than you will.`,
+        `${EVENT.dateLong}, ${EVENT.venue.name} in ${EVENT.venue.town}. Lunch and refreshments are included, and so is a 30-minute one-to-one with Pam or Marcia afterwards. It is a small room, ${EVENT.seats} seats, and this is the last week to take one.`,
+        `If the timing is wrong, or something else is holding you back, reply to this email and say so. Pam or Marcia will answer you personally, and we would honestly rather know than keep writing to you.`,
+      ],
+      cta: `Secure my seat, ${early}`,
     },
   };
 
