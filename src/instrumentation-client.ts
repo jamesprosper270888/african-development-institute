@@ -12,5 +12,8 @@ initBotId({
   protect: [
     { path: "/api/enquiry", method: "POST" },
     { path: "/api/leadership-enquiry", method: "POST" },
+    // The book reservation (21 Sep 2026): it emails whoever is named, so it is
+    // exactly the shape of form the bots were abusing.
+    { path: "/api/book-reservation", method: "POST" },
   ],
 });

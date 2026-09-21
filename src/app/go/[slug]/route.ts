@@ -22,6 +22,8 @@ function pcm(src: string, ad: string): string {
   return `${PCM}?src=${src}&camp=yana-sep26&ad=${ad}`;
 }
 
+const SITE = process.env.NEXT_PUBLIC_APP_URL ?? "https://africandevelopmentinstitute.com";
+
 const LINKS: Record<string, string> = {
   // Wave one: the early bird closing. Now until Sunday night.
   li: pcm("linkedin-organic", "li-earlybird"),
@@ -37,6 +39,10 @@ const LINKS: Record<string, string> = {
   // one channel the original brief never covered. Its own src value, because
   // if it really is outperforming the paid ads we need to be able to prove it.
   wa: pcm("whatsapp-organic", "wa-bringsomeone"),
+  // The book (21 Sep 2026): the QR code on the "Stay in touch" slide and the
+  // printed materials. Straight to ADI's own page, not through PCM, because it
+  // is a code in the room rather than an ad; ?src=qr is enough to count it.
+  book: `${SITE}/book?src=qr`,
 };
 
 // Never cached. A stale redirect would be harmless here, since every slug
