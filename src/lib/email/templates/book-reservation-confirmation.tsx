@@ -14,8 +14,17 @@ import { BOOK, bookUrl } from "@/lib/book-config";
 
 const serif = "Georgia, 'Times New Roman', serif";
 
-export function BookReservationConfirmation({ name }: { name: string }) {
+export function BookReservationConfirmation({
+  name,
+  readerId,
+}: {
+  name: string;
+  readerId: string;
+}) {
   const firstName = name.trim().split(/\s+/)[0] || name;
+  // Personal links: they unlock the gated pages on whatever device the reader
+  // opens them on (see /api/book-access). The plain page URLs open nothing.
+  const access = `${bookUrl("/api/book-access")}?r=${readerId}`;
 
   return (
     <Html>
@@ -38,7 +47,7 @@ export function BookReservationConfirmation({ name }: { name: string }) {
               book.
             </Text>
             <Button
-              href={bookUrl(BOOK.introductionPath)}
+              href={access}
               style={{
                 backgroundColor: "#C8102E",
                 color: "#FFFFFF",
@@ -54,7 +63,7 @@ export function BookReservationConfirmation({ name }: { name: string }) {
             <Text style={{ fontSize: 16, lineHeight: "26px", marginTop: 24 }}>
               We have also put the six questions at the heart of the book on a
               card you can print and keep:{" "}
-              <Link href={bookUrl(BOOK.questionsPath)} style={{ color: "#006B3F" }}>
+              <Link href={`${access}&to=questions`} style={{ color: "#006B3F" }}>
                 Six questions to carry
               </Link>
               .
@@ -73,8 +82,9 @@ export function BookReservationConfirmation({ name }: { name: string }) {
 
           <Hr style={{ borderColor: "#E5E0D8", margin: "24px 0" }} />
           <Text style={{ fontSize: 12, lineHeight: "18px", color: "#6b6560" }}>
-            You reserved a copy at {bookUrl().replace(/^https?:\/\//, "")}. Reply
-            to this email to reach us, or to ask us to stop writing to you.
+            You reserved a copy at {bookUrl().replace(/^https?:\/\//, "")}. The
+            links above are yours alone, so please keep this email. Reply to
+            reach us, or to ask us to stop writing to you.
             <br />
             {BOOK.publisher}
           </Text>

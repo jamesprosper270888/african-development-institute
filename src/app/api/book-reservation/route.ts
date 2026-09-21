@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
 import { forwardToGHL } from "@/lib/ghl";
 import { BOOK } from "@/lib/book-config";
+import { BOOK_READER_COOKIE, readerCookieOptions } from "@/lib/book-access";
 
 const reservationSchema = z.object({
   name: z.string().trim().min(1).max(200),
@@ -72,18 +73,24 @@ export async function POST(request: Request) {
     )
     .limit(1);
 
-  if (!existing) {
+  let readerId = existing?.id;
+
+  if (!readerId) {
     const message = `Reserved a copy of ${BOOK.title} (founding reader)${
       source ? `. Came via: ${source}` : ""
     }`;
 
-    await db.insert(enquiries).values({
-      name,
-      email,
-      type: "book",
-      message,
-      sourcePage: source || null,
-    });
+    const [row] = await db
+      .insert(enquiries)
+      .values({
+        name,
+        email,
+        type: "book",
+        message,
+        sourcePage: source || null,
+      })
+      .returning({ id: enquiries.id });
+    readerId = row.id;
 
     await sendEmail({
       to: internalRecipients(),
@@ -104,8 +111,12 @@ export async function POST(request: Request) {
   await sendEmail({
     to: email,
     subject: `Your copy of ${BOOK.title} is reserved`,
-    react: BookReservationConfirmation({ name }),
+    react: BookReservationConfirmation({ name, readerId }),
   });
 
-  return NextResponse.json({ success: true });
+  // The reader's key to the Introduction on this device (see book-access.ts).
+  // Set even for a repeat reservation, so a second phone gets in too.
+  const res = NextResponse.json({ success: true });
+  res.cookies.set(BOOK_READER_COOKIE, readerId, readerCookieOptions);
+  return res;
 }

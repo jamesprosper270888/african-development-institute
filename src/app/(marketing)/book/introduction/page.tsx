@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { BookCover } from "@/components/book/book-cover";
 import { BOOK } from "@/lib/book-config";
 import { INTRODUCTION, INTRODUCTION_VERSION } from "@/lib/book-introduction";
+import { visitorIsBookReader } from "@/lib/book-access";
 
 export const metadata: Metadata = {
   title: `Introduction: ${BOOK.title}`,
@@ -27,7 +29,13 @@ function withEmphasis(text: string) {
   );
 }
 
-export default function IntroductionPage() {
+export default async function IntroductionPage() {
+  // Founding readers only: search engines and anyone who merely has the link
+  // get the free reserve form instead (see src/lib/book-access.ts).
+  if (!(await visitorIsBookReader())) {
+    redirect(`${BOOK.path}?locked=1#reserve`);
+  }
+
   return (
     <>
       <Section variant="offwhite" className="pb-10 pt-14 md:pb-14 md:pt-20">
@@ -114,16 +122,6 @@ export default function IntroductionPage() {
                 Print the card
               </Link>
             </div>
-
-            <p className="mt-12 text-center text-muted-foreground">
-              Not yet a founding reader?{" "}
-              <Link
-                href={`${BOOK.path}#reserve`}
-                className="font-medium text-adi-green underline underline-offset-4"
-              >
-                Reserve your copy
-              </Link>
-            </p>
           </article>
         </Container>
       </Section>

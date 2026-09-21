@@ -6,7 +6,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/app/", "/stats/", "/api/"],
+      // The book's reader pages are for founding readers only (they are also
+      // noindex and gated; this just stops well-behaved crawlers knocking).
+      disallow: ["/app/", "/stats/", "/api/", "/book/introduction", "/book/questions"],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

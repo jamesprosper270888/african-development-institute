@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { PrintButton } from "@/components/book/print-button";
 import { BOOK, bookUrl } from "@/lib/book-config";
+import { visitorIsBookReader } from "@/lib/book-access";
 
 export const metadata: Metadata = {
   title: `Six questions to carry: ${BOOK.title}`,
@@ -12,7 +14,12 @@ export const metadata: Metadata = {
  * The founding readers' printable card: the six questions the Introduction
  * asks of experience. Sized to print on one A5 or A4 sheet.
  */
-export default function QuestionsCardPage() {
+export default async function QuestionsCardPage() {
+  // A founding readers' bonus, gated like the Introduction.
+  if (!(await visitorIsBookReader())) {
+    redirect(`${BOOK.path}?locked=1#reserve`);
+  }
+
   return (
     <div className="mx-auto max-w-xl px-4 py-10 print:max-w-none print:p-0">
       <div className="mb-6 flex items-center justify-between gap-4 print:hidden">

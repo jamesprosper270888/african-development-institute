@@ -10,17 +10,19 @@
  * QR code for the event on 26 Sep.
  */
 export const BOOK = {
-  // WORKING TITLE. The Introduction names the idea "the Third Way" but the
-  // book itself has no title yet. Pam and Marcia choose; change it here and
-  // the cover, pages and emails all follow.
-  title: "The Third Way",
+  // Confirmed by James 21 Sep 2026 ("title is third space"). Note the
+  // Introduction itself (v6) still calls the idea "the Third Way"; that is
+  // Pam and Marcia's text and is quoted as written.
+  title: "The Third Space",
   subtitle: "A different quality of seeing",
   authors: ["Pam Rowe", "Marcia Daigo"],
   publisher: "African Development Institute",
 
-  // FALSE until Pam and Marcia approve the page. While false the pages are
-  // noindex and stay out of the sitemap, so only people given the link (or
-  // the QR code) can find them. Flip to true and add "/book" to sitemap.ts.
+  // FALSE: James wants the book kept out of search engines (21 Sep 2026).
+  // While false /book is noindex and out of the sitemap, so people arrive by
+  // the QR code or a link. The Introduction and questions card are noindex,
+  // disallowed in robots.ts AND gated to founding readers (book-access.ts)
+  // whatever this says.
   listed: false,
 
   path: "/book",

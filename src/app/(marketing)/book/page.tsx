@@ -8,8 +8,7 @@ import { BOOK } from "@/lib/book-config";
 
 export const metadata: Metadata = {
   title: `${BOOK.title}: a book in progress`,
-  description:
-    "The Third Way, a book in progress from the African Development Institute by Pam Rowe and Marcia Daigo. Reserve your copy free and read the Introduction today.",
+  description: `${BOOK.title}, a book in progress from the African Development Institute by ${BOOK.authors.join(" and ")}. Reserve your copy free and read the Introduction today.`,
   // Hidden from search until Pam and Marcia approve it; see BOOK.listed.
   robots: BOOK.listed ? undefined : { index: false, follow: false },
 };
@@ -39,7 +38,16 @@ const themes = [
   },
 ];
 
-export default function BookPage() {
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+export default async function BookPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  // Set when someone without a reservation tried to open the Introduction.
+  const locked = (await searchParams).locked === "1";
+
   return (
     <>
       {/* Hero */}
@@ -178,6 +186,13 @@ export default function BookPage() {
               </ol>
             </div>
             <div className="rounded-xl border border-border bg-background p-8 md:self-start md:p-10">
+              {locked && (
+                <p className="mb-6 rounded-lg border-l-2 border-adi-red bg-card px-4 py-3 text-sm leading-relaxed">
+                  The Introduction is for founding readers. Reserve your free
+                  copy here and you can read it straight away. Already
+                  reserved? Open the link in your reservation email.
+                </p>
+              )}
               <p className="mb-6 font-[family-name:var(--font-cormorant)] text-2xl font-semibold">
                 Become a founding reader
               </p>
