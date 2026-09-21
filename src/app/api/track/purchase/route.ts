@@ -89,6 +89,8 @@ export async function POST(request: Request) {
       }
       await sendEmail({
         to: internalRecipients(),
+        // Reply goes to the buyer when we know them, else the default inbox.
+        replyTo: row?.email,
         subject: `[ADI] PAID £${value.toFixed(2)}: ${name} — ${EVENT.name}`,
         react: EnquiryNotification({
           name,

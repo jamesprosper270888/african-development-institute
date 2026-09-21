@@ -70,9 +70,10 @@ export async function POST(request: Request) {
   // Append to Google Sheet
   await appendToSheet("Enquiries", [[timestamp, name, email, type, message]]);
 
-  // Send admin notification
+  // Send admin notification; Reply writes straight back to the enquirer
   await sendEmail({
     to: internalRecipients(),
+    replyTo: email,
     subject: `[ADI] New ${type} enquiry from ${name}`,
     react: EnquiryNotification({ name, email, type, message, timestamp }),
   });

@@ -69,9 +69,10 @@ export async function POST(request: Request) {
     [timestamp, name, email, roleOrg, motivation, "HIGH PRIORITY"],
   ]);
 
-  // Send admin notification (high priority)
+  // Send admin notification (high priority); Reply writes back to the applicant
   await sendEmail({
     to: internalRecipients(),
+    replyTo: email,
     subject: `[ADI] LEADERSHIP ENQUIRY from ${name}`,
     react: EnquiryNotification({
       name,

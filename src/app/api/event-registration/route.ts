@@ -151,9 +151,11 @@ export async function POST(request: Request) {
     ],
   ]);
 
-  // Internal notification (Pam/Marcia's inbox + James) — see NOTIFY_EMAILS
+  // Internal notification (Pam/Marcia's inbox + James) — see NOTIFY_EMAILS.
+  // Reply-To is the reserver, so hitting Reply writes to them, not to hello@.
   await sendEmail({
     to: internalRecipients(),
+    replyTo: email,
     subject: `[ADI] Seat reserved (${isMember ? "member" : "guest"}): ${name} — ${event}`,
     react: EnquiryNotification({
       name,

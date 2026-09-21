@@ -14,6 +14,12 @@ function getResend(): Resend | null {
 
 const EMAIL_FROM = process.env.EMAIL_FROM || "ADI <hello@africandevelopmentinstitute.com>";
 
+// hello@ is only a sending address: the root domain has no MX, so anything
+// replied to it is lost. That is how Pam and Marcia's note to Shola vanished
+// on 10 Sep. Every email therefore carries a Reply-To that a person reads:
+// REPLY_TO_EMAIL (the ADI Gmail) unless the caller names someone better.
+const DEFAULT_REPLY_TO = process.env.REPLY_TO_EMAIL;
+
 /**
  * Who receives internal notifications (new enquiry, seat reserved, ticket paid).
  * NOTIFY_EMAILS = comma-separated list; falls back to the EMAIL_FROM mailbox.
@@ -48,12 +54,13 @@ export async function sendEmail({
     return { success: true };
   }
 
+  const reply = replyTo || DEFAULT_REPLY_TO;
   const { error } = await resend.emails.send({
     from: EMAIL_FROM,
     to,
     subject,
     react,
-    ...(replyTo ? { replyTo } : {}),
+    ...(reply ? { replyTo: reply } : {}),
   });
 
   if (error) {
