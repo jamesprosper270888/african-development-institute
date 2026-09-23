@@ -10,10 +10,11 @@
  * QR code for the event on 26 Sep.
  */
 export const BOOK = {
-  // Confirmed by James 21 Sep 2026 ("title is third space"). Note the
-  // Introduction itself (v6) still calls the idea "the Third Way"; that is
-  // Pam and Marcia's text and is quoted as written.
-  title: "The Third Space",
+  // The Third Way, matching the Introduction's own name for the idea. It was
+  // briefly "The Third Space" (21 Sep) on a misremembering; James corrected it
+  // on 23 Sep. Avoid "Third Space": it is a London gym chain and an existing
+  // self-help book (Adam Fraser, Penguin).
+  title: "The Third Way",
   subtitle: "A different quality of seeing",
   authors: ["Pam Rowe", "Marcia Daigo"],
   publisher: "African Development Institute",
