@@ -45,9 +45,7 @@ export async function POST(request: Request) {
     const params =
       item === "ticket"
         ? await ticketSession(origin, now, ref)
-        : item === "test"
-          ? testSession(origin)
-          : membershipSession(origin, item);
+        : membershipSession(origin, item);
     if ("error" in params) {
       return NextResponse.json({ error: params.error }, { status: params.status });
     }
@@ -147,16 +145,5 @@ function membershipSession(origin: string, item: "monthly" | "annual"): SessionP
     return_url: `${origin}/membership/welcome?session_id={CHECKOUT_SESSION_ID}`,
     metadata,
     subscription_data: { description: itemName(item), metadata },
-  };
-}
-
-/** The hidden 30p real-card check: comes back to /pay/test, touches nothing. */
-function testSession(origin: string): SessionParams {
-  const metadata = { item: "test" };
-  return {
-    mode: "payment",
-    return_url: `${origin}/pay/test?done={CHECKOUT_SESSION_ID}`,
-    metadata,
-    payment_intent_data: { description: itemName("test"), metadata },
   };
 }
