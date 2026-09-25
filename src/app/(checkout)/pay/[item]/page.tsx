@@ -5,7 +5,7 @@ import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
 import { EVENT, stripeCheckoutOn, ticketUrl } from "@/lib/event-config";
-import { isPayItem, type PayItem } from "@/lib/stripe";
+import { isPayItem, stripe, type PayItem } from "@/lib/stripe";
 import { CheckoutForm } from "./checkout-form";
 
 export const metadata: Metadata = {
@@ -38,6 +38,11 @@ const COPY: Record<PayItem, { kicker: string; title: string; lines: string[] }> 
       "Renews monthly. Cancel any time: just email us.",
     ],
   },
+  test: {
+    kicker: "Checkout test",
+    title: "Real-card test, 30p",
+    lines: ["A private check of the live checkout. It will be refunded."],
+  },
   annual: {
     kicker: "ADI Membership",
     title: "Annual membership",
@@ -62,6 +67,7 @@ const BENEFITS: Record<PayItem, { icon: LucideIcon; text: string }[]> = {
     { icon: CalendarCheck, text: "Monthly and flexible: cancel any time" },
     { icon: Users, text: "A community of Black professionals who get it" },
   ],
+  test: [{ icon: Lock, text: "Secure payment, processed by Stripe" }],
   annual: [
     { icon: Lock, text: "Secure payment, processed by Stripe" },
     { icon: BellRing, text: "We remind you before it renews each year" },
@@ -80,6 +86,18 @@ export default async function PayPage({
   if (!isPayItem(item) || !stripeCheckoutOn()) notFound();
 
   const query = await searchParams;
+  if (item === "test" && typeof query.done === "string" && query.done.startsWith("cs_")) {
+    const done = await stripe().checkout.sessions.retrieve(query.done).catch(() => null);
+    return (
+      <Section className="py-20">
+        <Container>
+          <Heading as="h1" className="text-center text-3xl">
+            {done?.payment_status === "paid" ? "Test payment received." : "Test payment not completed."}
+          </Heading>
+        </Container>
+      </Section>
+    );
+  }
   const refId = typeof query.r === "string" ? query.r : undefined;
   const copy = COPY[item];
   const closed = item === "ticket" && !ticketUrl();

@@ -28,9 +28,11 @@ export function stripe(): Stripe {
   return client;
 }
 
-export type PayItem = "ticket" | "monthly" | "annual";
+// "test" is a hidden 30p one-off for a real-card check of the live checkout
+// (Stripe's minimum). Touches no seat, member, list or tracking. Remove after.
+export type PayItem = "ticket" | "monthly" | "annual" | "test";
 
-export const PAY_ITEMS: readonly PayItem[] = ["ticket", "monthly", "annual"];
+export const PAY_ITEMS: readonly PayItem[] = ["ticket", "monthly", "annual", "test"];
 
 export function isPayItem(value: unknown): value is PayItem {
   return typeof value === "string" && (PAY_ITEMS as readonly string[]).includes(value);
@@ -43,10 +45,12 @@ export const MEMBERSHIP = {
 
 /** What a pay item costs right now, in pounds. The ticket price moves by date. */
 export function itemAmount(item: PayItem, now: Date = new Date()): number {
+  if (item === "test") return 0.3;
   return item === "ticket" ? currentTicketPrice(now) : MEMBERSHIP[item].amount;
 }
 
 export function itemName(item: PayItem): string {
+  if (item === "test") return "ADI checkout test (refunded)";
   return item === "ticket" ? `${EVENT.name} ticket (${EVENT.dateShort})` : MEMBERSHIP[item].name;
 }
 
@@ -59,7 +63,8 @@ export function itemName(item: PayItem): string {
  */
 export async function priceFor(item: PayItem, now: Date = new Date()): Promise<string> {
   const pence = Math.round(itemAmount(item, now) * 100);
-  const lookupKey = `adi_${item === "ticket" ? `${EVENT.slug}_ticket` : `membership_${item}`}_${pence}`;
+  const kind = item === "ticket" ? `${EVENT.slug}_ticket` : item === "test" ? "checkout_test" : `membership_${item}`;
+  const lookupKey = `adi_${kind}_${pence}`;
 
   const find = async () =>
     (await stripe().prices.list({ lookup_keys: [lookupKey], active: true, limit: 1 })).data[0]?.id;
@@ -73,7 +78,7 @@ export async function priceFor(item: PayItem, now: Date = new Date()): Promise<s
       unit_amount: pence,
       lookup_key: lookupKey,
       product_data: { name: itemName(item) },
-      ...(item === "ticket" ? {} : { recurring: { interval: MEMBERSHIP[item].interval } }),
+      ...(item === "ticket" || item === "test" ? {} : { recurring: { interval: MEMBERSHIP[item].interval } }),
     });
     return price.id;
   } catch (err) {
