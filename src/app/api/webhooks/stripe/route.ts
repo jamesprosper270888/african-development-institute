@@ -259,6 +259,40 @@ async function notifyNewMember(
 ) {
   const amount = (session.amount_total ?? 0) / 100;
   const plan = item === "annual" ? "Annual" : "Monthly";
+
+  // The YANA thank-you offer: join for the year by Sun 27 Sep midnight (BST)
+  // and the £24.99 ticket is refunded. Refunds are done by hand in Stripe, so
+  // the Telegram ping says whether this one is owed.
+  const offerEnds = new Date("2026-09-27T23:00:00Z");
+  const [ticket] = await db
+    .select({ paidAt: enquiries.paidAt })
+    .from(enquiries)
+    .where(
+      and(
+        eq(enquiries.type, "event"),
+        dsql`lower(${enquiries.email}) = ${member.email.toLowerCase()}`,
+        dsql`${enquiries.paidAt} is not null`
+      )
+    )
+    .limit(1)
+    .catch(() => []); // a failed lookup must never cost the member their emails
+  const refundLine =
+    item !== "annual" || new Date() > offerEnds
+      ? ticket ? "Had a paid ticket: no refund owed (monthly or after the deadline)." : null
+      : ticket
+        ? "↩️ <b>Refund their £24.99 ticket in Stripe</b> (YANA offer)."
+        : "No paid ticket under this email. If they came on Saturday, check by name and refund £24.99.";
+
+  await sendTelegramNotification(
+    [
+      `🎉 <b>NEW ADI MEMBER: ${plan} £${amount.toFixed(2)}</b>`,
+      escapeHtml(member.name),
+      refundLine,
+    ]
+      .filter(Boolean)
+      .join("\n")
+  );
+
   await sendEmail({
     to: internalRecipients(),
     replyTo: member.email,
