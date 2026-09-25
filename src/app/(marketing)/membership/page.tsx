@@ -4,6 +4,15 @@ import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
 import { EnquiryForm } from "@/components/forms/enquiry-form";
+import { stripeCheckoutOn } from "@/lib/event-config";
+
+// ADI's own Stripe checkout when it is on; the GHL pages only as a fallback.
+const joinMonthly = stripeCheckoutOn()
+  ? "/pay/monthly"
+  : "https://pay.africandevelopmentinstitute.com/secure-checkout-page-m2025";
+const joinAnnual = stripeCheckoutOn()
+  ? "/pay/annual"
+  : "https://pay.africandevelopmentinstitute.com/secure-checkout-page-y2025";
 
 export const metadata: Metadata = {
   title: "Membership",
@@ -173,7 +182,7 @@ export default function MembershipPage() {
                 Flexible monthly commitment. Cancel anytime.
               </p>
               <a
-                href="https://pay.africandevelopmentinstitute.com/secure-checkout-page-m2025"
+                href={joinMonthly}
                 className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-red px-8 text-sm font-semibold text-white transition-colors hover:bg-adi-red/90"
               >
                 Join Monthly
@@ -191,10 +200,10 @@ export default function MembershipPage() {
                 <span className="text-muted-foreground">/year</span>
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
-                Save over £85 per year. Full commitment, full access.
+                Save over £85 per year. Renews yearly, and we email you before it does.
               </p>
               <a
-                href="https://pay.africandevelopmentinstitute.com/secure-checkout-page-y2025"
+                href={joinAnnual}
                 className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-md bg-adi-green px-8 text-sm font-semibold text-white transition-colors hover:bg-adi-green/90"
               >
                 Join Annual

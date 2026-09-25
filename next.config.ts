@@ -41,16 +41,18 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.clarity.ms https://connect.facebook.net",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.clarity.ms https://connect.facebook.net https://js.stripe.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self'",
-              "connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://*.clarity.ms https://www.facebook.com https://connect.facebook.net",
+              "connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://*.clarity.ms https://www.facebook.com https://connect.facebook.net https://api.stripe.com https://checkout.stripe.com https://merchant-ui-api.stripe.com",
               // 'self', not 'none': withBotId marks its own challenge path as
               // frameable by this site only (X-Frame-Options SAMEORIGIN,
               // frame-ancestors 'self'), and 'none' would block that frame
               // too, failing real visitors. Outside sites still cannot frame us.
-              "frame-src 'self'",
+              // Stripe's embedded checkout (/pay) and the bank approval
+              // (3-D Secure) screens it opens.
+              "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
             ].join("; "),
           },
         ],

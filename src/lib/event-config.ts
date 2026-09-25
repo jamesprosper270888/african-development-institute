@@ -182,11 +182,25 @@ export function standardTicketUrl(): string | null {
  * early-bird link until the deadline, the standard link after it. Null when
  * that checkout is not live, so callers fall back to "we will be in touch".
  */
-export function ticketUrl(now: Date = new Date()): string | null {
+export function ticketUrl(now: Date = new Date(), ref?: string): string | null {
   if (isEarlyBirdOpen(now)) {
+    if (stripeCheckoutOn()) {
+      return `${SITE_URL}/pay/ticket${ref ? `?r=${encodeURIComponent(ref)}` : ""}`;
+    }
     return EVENT.tickets.earlyBirdReady ? EVENT.tickets.earlyBirdUrl : null;
   }
   return standardTicketUrl();
+}
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://africandevelopmentinstitute.com";
+
+/**
+ * True once the Stripe keys are set: pay links point at ADI's own /pay page
+ * (see src/lib/stripe.ts). Remove NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY and
+ * redeploy to fall back to the GHL links above.
+ */
+export function stripeCheckoutOn(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 }
 
 /**

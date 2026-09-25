@@ -15,10 +15,16 @@ import {
   eventPath,
   LEAD_COOKIE,
   currentTicketPrice,
+  stripeCheckoutOn,
 } from "@/lib/event-config";
 
 /**
- * Fired by the thank-you page when GHL redirects back with ?paid=1.
+ * Fired by the thank-you page when the buyer comes back with ?paid=1.
+ *
+ * With ADI's own Stripe checkout on, this is tracking only (Meta + PCM): the
+ * Stripe webhook marks the seat paid and sends the PAID email and Telegram,
+ * because only it knows the money landed. The GHL-era paid marking below runs
+ * only while Stripe is off.
  * Sends Purchase to Meta CAPI (deduped with the browser pixel via eventId)
  * and an approved postback to PCM.
  *
@@ -105,8 +111,10 @@ export async function POST(request: Request) {
     }
   };
 
+  const legacyGhl = !stripeCheckoutOn();
+
   await Promise.all([
-    notifyPaid(),
+    legacyGhl ? notifyPaid() : null,
     sendMetaEvent({
       eventName: "Purchase",
       eventId,
@@ -129,6 +137,7 @@ export async function POST(request: Request) {
       payout: value,
       status: "approved",
     }),
+    legacyGhl &&
     sendTelegramNotification(
       [
         `💷 <b>TICKET PURCHASED — ADI ${escapeHtml(EVENT.name)}</b>`,

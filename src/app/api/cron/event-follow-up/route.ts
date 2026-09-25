@@ -115,6 +115,7 @@ export async function GET(request: Request) {
         name: row.name,
         stage,
         stopHref: stopUrl(row.id),
+        refId: row.id,
       }),
       replyTo: process.env.REPLY_TO_EMAIL,
     });

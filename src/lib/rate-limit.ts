@@ -4,7 +4,10 @@ const requests = new Map<string, { count: number; resetAt: number }>();
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const MAX_REQUESTS = 5;
 
-export function checkRateLimit(identifier: string): { success: boolean } {
+export function checkRateLimit(
+  identifier: string,
+  maxRequests: number = MAX_REQUESTS
+): { success: boolean } {
   const now = Date.now();
   const entry = requests.get(identifier);
 
@@ -13,7 +16,7 @@ export function checkRateLimit(identifier: string): { success: boolean } {
     return { success: true };
   }
 
-  if (entry.count >= MAX_REQUESTS) {
+  if (entry.count >= maxRequests) {
     return { success: false };
   }
 

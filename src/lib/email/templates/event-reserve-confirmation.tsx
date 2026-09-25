@@ -21,17 +21,20 @@ import {
 export function EventReserveConfirmation({
   name,
   isMember,
+  refId,
   now = new Date(),
 }: {
   name: string;
   isMember: boolean;
+  /** The reservation, so the pay page marks this seat paid, not a new one. */
+  refId?: string;
   /** Send time: decides last-chance or standard wording, price and link. */
   now?: Date;
 }) {
   const firstName = name.trim().split(/\s+/)[0] || name;
   const earlyOpen = isEarlyBirdOpen(now);
   const price = formatGBP(currentTicketPrice(now));
-  const payUrl = ticketUrl(now);
+  const payUrl = ticketUrl(now, refId);
   // Pairs and single seats are separate GHL products with their own stock
   // caps, so the pair button and the single link must each reach their own.
   const pairUrl = pairTicketUrl(now);

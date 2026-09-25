@@ -174,7 +174,7 @@ export async function POST(request: Request) {
       : isEarlyBirdOpen()
         ? `Your seat is reserved: secure it at half price`
         : `Your seat is reserved: here is how to secure it`,
-    react: EventReserveConfirmation({ name, isMember }),
+    react: EventReserveConfirmation({ name, isMember, refId: row?.id }),
     replyTo: process.env.REPLY_TO_EMAIL,
   });
 

@@ -31,11 +31,14 @@ export function EventFollowUp({
   name,
   stage,
   stopHref,
+  refId,
   now = new Date(),
 }: {
   name: string;
   stage: FollowUpStage;
   stopHref: string;
+  /** The reservation, so the pay page marks this seat paid, not a new one. */
+  refId?: string;
   /** Send time: stage 1 can go out either side of the early-bird deadline. */
   now?: Date;
 }) {
@@ -54,13 +57,7 @@ export function EventFollowUp({
 
   // Stages 2 and 3 only send before the deadline; 4 only after it; 1 either side.
   const payUrl =
-    stage === 1
-      ? ticketUrl(now)
-      : stage === 4
-        ? standardTicketUrl()
-        : EVENT.tickets.earlyBirdReady
-          ? EVENT.tickets.earlyBirdUrl
-          : null;
+    stage === 4 ? standardTicketUrl() : ticketUrl(now, refId);
 
   const body: Record<FollowUpStage, { lead: string; paras: string[]; cta: string }> = {
     1: {

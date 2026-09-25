@@ -73,6 +73,11 @@ export const members = pgTable("members", {
   joinedAt: timestamp("joined_at"),
   notes: text("notes"),
   userId: text("user_id").references(() => user.id),
+  // Stripe, kept up to date by /api/webhooks/stripe on every payment, renewal
+  // and cancellation. membershipEndsAt is the member test: paid up until then.
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  membershipEndsAt: timestamp("membership_ends_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -95,8 +100,10 @@ export const enquiries = pgTable("enquiries", {
   // to work from instead of parsing the free-text `message` blob.
   phone: text("phone"),
   isMember: boolean("is_member").notNull().default(false),
-  /** Set by /api/track/purchase when the ticket is paid. Null = still owing. */
+  /** Set when the ticket is paid (Stripe webhook). Null = still owing. */
   paidAt: timestamp("paid_at"),
+  /** The Stripe Checkout Session that paid it: the webhook's dedupe key. */
+  stripeSessionId: text("stripe_session_id"),
   /** How many follow-up emails this reservation has had (0 = none yet). */
   followUpStage: integer("follow_up_stage").notNull().default(0),
   followUpLastAt: timestamp("follow_up_last_at"),

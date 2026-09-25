@@ -10,7 +10,29 @@ import {
   pairTicketUrl,
   ticketUrl,
 } from "@/lib/event-config";
+import { stripe } from "@/lib/stripe";
 import { PurchaseTracker } from "./purchase-tracker";
+
+/**
+ * Stripe sends buyers back with ?session_id=. Ask Stripe whether that session
+ * really paid, so a typed-in ?paid=1 cannot show "your seat is confirmed" or fire
+ * a Purchase. Returns null when there is no session to check (GHL-era links).
+ */
+async function stripeSessionPaid(
+  sessionId: string | undefined
+): Promise<{ paid: boolean; firstName: string } | null> {
+  if (!sessionId || !sessionId.startsWith("cs_")) return null;
+  try {
+    const session = await stripe().checkout.sessions.retrieve(sessionId);
+    const name = session.customer_details?.individual_name ?? session.customer_details?.name ?? "";
+    return {
+      paid: session.metadata?.item === "ticket" && session.payment_status === "paid",
+      firstName: name.trim().split(/\s+/)[0] ?? "",
+    };
+  } catch {
+    return { paid: false, firstName: "" };
+  }
+}
 
 export const metadata: Metadata = {
   title: `Your seat — ${EVENT.name}`,
@@ -25,9 +47,12 @@ export default async function ThankYouPage({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
-  const paid = params.paid === "1";
+  const checked = await stripeSessionPaid(
+    typeof params.session_id === "string" ? params.session_id : undefined
+  );
+  const paid = checked ? checked.paid : params.paid === "1";
   const member = params.member === "1";
-  const first = typeof params.n === "string" ? params.n : "";
+  const first = checked?.firstName || (typeof params.n === "string" ? params.n : "");
   const earlyBird = formatGBP(EVENT.pricing.earlyBird);
   const standard = formatGBP(EVENT.pricing.standard);
   // Decided per request (this page is dynamic): last chance until the
@@ -53,7 +78,7 @@ export default async function ThankYouPage({
             </p>
             <Heading as="h1" className="mt-4">
               {paid
-                ? `${first ? `${first}, y` : "Y"}our seat is yours.`
+                ? `${first ? `${first}, y` : "Y"}our seat is confirmed.`
                 : member
                   ? `${first ? `${first}, y` : "Y"}ou're in.`
                   : `${first ? `${first}, y` : "Y"}our seat is reserved.`}
