@@ -12,7 +12,13 @@ import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
 import { forwardToGHL } from "@/lib/ghl";
 import { sendMetaEvent } from "@/lib/meta-capi";
 import { postbackToPCM } from "@/lib/pcm-postback";
-import { EVENT, eventPath, isEarlyBirdOpen, LEAD_COOKIE } from "@/lib/event-config";
+import {
+  EVENT,
+  eventPath,
+  hasEnded,
+  isEarlyBirdOpen,
+  LEAD_COOKIE,
+} from "@/lib/event-config";
 
 const attributionSchema = z
   .object({
@@ -41,6 +47,21 @@ const registrationSchema = z.object({
 const CAMPAIGN_START = new Date("2026-09-01T00:00:00Z");
 
 export async function POST(request: Request) {
+  // The day has happened. The page stopped showing this form at the same
+  // moment, but a tab left open since the morning, or an old ad link, can
+  // still post here, and a reservation now would put someone into the
+  // pay-for-your-seat follow-up emails for an event that is over. 410 rather
+  // than 400: it is not their mistake, it is simply gone.
+  if (hasEnded()) {
+    return NextResponse.json(
+      {
+        error:
+          "Booking for You Are Not Alone has closed. Register your interest for the next one on the event page.",
+      },
+      { status: 410 }
+    );
+  }
+
   const ip = getClientIP(request);
   const { success } = checkRateLimit(ip);
   if (!success) {

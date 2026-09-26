@@ -4,7 +4,7 @@ import { BellRing, CalendarCheck, HeartHandshake, Lock, Mail, Smartphone, Users,
 import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
-import { EVENT, stripeCheckoutOn, ticketUrl } from "@/lib/event-config";
+import { EVENT, hasEnded, stripeCheckoutOn, ticketUrl } from "@/lib/event-config";
 import { isPayItem, type PayItem } from "@/lib/stripe";
 import { CheckoutForm } from "./checkout-form";
 
@@ -82,7 +82,7 @@ export default async function PayPage({
   const query = await searchParams;
   const refId = typeof query.r === "string" ? query.r : undefined;
   const copy = COPY[item];
-  const closed = item === "ticket" && !ticketUrl();
+  const closed = item === "ticket" && (hasEnded() || !ticketUrl());
 
   return (
     <Section className="py-12 md:py-20">

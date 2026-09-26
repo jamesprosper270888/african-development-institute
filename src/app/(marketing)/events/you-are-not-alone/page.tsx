@@ -13,25 +13,52 @@ import {
   Train,
   Car,
   UtensilsCrossed,
+  PenLine,
+  CalendarHeart,
+  HeartHandshake,
 } from "lucide-react";
+import Link from "next/link";
 import { Section } from "@/components/shared/section";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
 import { EventRegistrationForm } from "@/components/forms/event-registration-form";
+import { EventInterestForm } from "@/components/forms/event-interest-form";
+import { BOOK } from "@/lib/book-config";
 import {
   EVENT,
+  NEXT_EVENT,
   eventPath,
   formatGBP,
+  hasEnded,
   isEarlyBirdOpen,
   pairTicketUrl,
   standardTicketUrl,
 } from "@/lib/event-config";
 
 // Re-rendered at most a minute after the last-chance deadline passes, so the
-// page switches to the standard price on its own, with no redeploy.
+// page switches to the standard price on its own, with no redeploy. The same
+// applies at EVENT.endsAt: within a minute of 4pm on the day, the page becomes
+// the post-event version (PostEventPage below).
 export const revalidate = 60;
 
 export function generateMetadata(): Metadata {
+  // After the day: no prices and no "seats", because nothing is on sale. The
+  // OG image stays, since people share this link to say they were there.
+  if (hasEnded()) {
+    const title = `${EVENT.name}: thank you for being there`;
+    const description = `Thank you to everyone who came to ${EVENT.name} on ${EVENT.dateLong} at ${EVENT.venue.name}. ${NEXT_EVENT.name} is planned for ${NEXT_EVENT.whenLabel}: register your interest.`;
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: [{ url: `/events/${EVENT.slug}-og.jpg`, width: 1200, height: 630 }],
+        type: "website",
+      },
+    };
+  }
+
   const price = isEarlyBirdOpen()
     ? `Last chance ${formatGBP(EVENT.pricing.earlyBird)}`
     : `Tickets ${formatGBP(EVENT.pricing.standard)}`;
@@ -145,7 +172,155 @@ function TicketButton({
   );
 }
 
+/**
+ * The page once the day is over. The sales page below is left exactly as it
+ * was, unreachable rather than deleted, so the next event can reuse it.
+ *
+ * Nothing here takes a booking: the reservation form is not rendered, and
+ * /api/event-registration answers 410 after EVENT.endsAt in any case.
+ */
+function PostEventPage() {
+  return (
+    <>
+      <Section variant="dark" className="py-16 md:py-24">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-adi-red">
+              {EVENT.name}
+            </p>
+            <Heading as="h1" className="mt-4 text-5xl md:text-6xl lg:text-7xl">
+              Thank you for being there.
+            </Heading>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 text-white/80 sm:flex-row sm:gap-x-8">
+              <span className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-adi-green" />
+                {EVENT.dateLong}
+              </span>
+              <span className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-adi-green" />
+                {EVENT.venue.name}, {EVENT.venue.town}
+              </span>
+            </div>
+            <p className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-white/80">
+              The room was full. People who had carried it quietly for years
+              said it out loud, and heard others say it back. Everyone left
+              with a plan, some new people to call on, and the one thing the
+              day was named for: the knowledge that they are not alone.
+            </p>
+          </div>
+        </Container>
+      </Section>
+
+      {/* GALLERY PLACEHOLDER. Photos from the day go here, and ONLY once
+          consent exists: every person recognisable in a photo must have
+          answered "Yes, you can use photos..." on the feedback form (stored
+          as type = "event-feedback" in enquiries). Until then this stays
+          empty. Do not reuse EVENT.gallery here: those are from a 2025
+          gathering and would read as photos of this day. */}
+
+      {/* Were you there? */}
+      <Section>
+        <Container>
+          <div className="mx-auto max-w-2xl rounded-xl border border-border bg-card p-8 text-center md:p-10">
+            <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-lg bg-adi-red/10">
+              <PenLine className="h-6 w-6 text-adi-red" />
+            </div>
+            <Heading as="h2" className="mt-5">
+              Were you there? Tell us about your day
+            </Heading>
+            <p className="mt-4 text-lg text-muted-foreground">
+              A few minutes of your honest thoughts will shape the next one,
+              and help someone still on their own decide to come.
+            </p>
+            <Link
+              href={eventPath("/feedback")}
+              className="mt-8 inline-flex h-12 items-center justify-center rounded-md bg-adi-red px-8 text-base font-semibold text-white transition-colors hover:bg-adi-red/90"
+            >
+              Share your feedback
+            </Link>
+          </div>
+        </Container>
+      </Section>
+
+      {/* The next one. White on purpose, the same break the venue section
+          gives the sales page. */}
+      <Section id="next" variant="white">
+        <Container>
+          <div className="mx-auto max-w-2xl">
+            <div className="text-center">
+              <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-lg bg-adi-green/10">
+                <CalendarHeart className="h-6 w-6 text-adi-green" />
+              </div>
+              <Heading as="h2" className="mt-5">
+                {NEXT_EVENT.name}, {NEXT_EVENT.whenLabel}
+              </Heading>
+              <p className="mt-4 text-lg text-muted-foreground">
+                We are already planning the next gathering. Leave your details
+                and you will be among the first to hear when the date is set,
+                whether you came this time or wish you had.
+              </p>
+            </div>
+            <div className="mt-10">
+              <EventInterestForm eventName={NEXT_EVENT.name} />
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Stay connected */}
+      <Section variant="offwhite">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center">
+            <Heading as="h2">You do not have to wait for the next one</Heading>
+          </div>
+          <div className="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2">
+            <div className="flex flex-col rounded-xl border border-adi-green bg-card p-7">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-adi-green/10">
+                <HeartHandshake className="h-6 w-6 text-adi-green" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">Join ADI</h3>
+              <p className="mt-2 flex-1 leading-relaxed text-muted-foreground">
+                Keep the room going all year: a community of Black
+                professionals who get it, with masterminds, coaching and
+                learning.
+              </p>
+              <Link
+                href="/membership"
+                className="mt-6 inline-flex h-12 items-center justify-center rounded-md bg-adi-green px-6 text-base font-semibold text-white transition-colors hover:bg-adi-green/90"
+              >
+                See membership
+              </Link>
+            </div>
+            <div className="flex flex-col rounded-xl border border-border bg-card p-7">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-adi-red/10">
+                <BookOpen className="h-6 w-6 text-adi-red" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">
+                Reserve {BOOK.title}
+              </h3>
+              <p className="mt-2 flex-1 leading-relaxed text-muted-foreground">
+                The book in progress from Pam and Marcia. Reserve your copy
+                free and read the Introduction today.
+              </p>
+              <Link
+                href="/book"
+                className="mt-6 inline-flex h-12 items-center justify-center rounded-md border border-border px-6 text-base font-semibold transition-colors hover:bg-muted"
+              >
+                Reserve your copy
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    </>
+  );
+}
+
 export default function YouAreNotAlonePage() {
+  // Checked at every regeneration (revalidate above). Everything after this
+  // line is the sales page, kept intact for reference and for the next event.
+  if (hasEnded()) return <PostEventPage />;
+
   const earlyBird = formatGBP(EVENT.pricing.earlyBird);
   const standard = formatGBP(EVENT.pricing.standard);
   // Checked at every regeneration (revalidate above): once the deadline has

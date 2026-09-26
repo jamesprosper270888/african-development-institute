@@ -154,7 +154,27 @@ export function isEarlyBirdOpen(now: Date = new Date()): boolean {
   return now.getTime() < new Date(EVENT.pricing.earlyBirdUntil).getTime();
 }
 
-export function eventPath(sub: "" | "/thank-you" = ""): string {
+/**
+ * True from the moment the day finishes (EVENT.endsAt). The event page swaps
+ * to its thank-you-for-coming version and /api/event-registration stops
+ * taking reservations, both on their own: the page revalidates every 60
+ * seconds, so nothing has to be deployed at 4pm on the day.
+ */
+export function hasEnded(now: Date = new Date()): boolean {
+  return now.getTime() >= new Date(EVENT.endsAt).getTime();
+}
+
+/**
+ * The next gathering, as far as it is known. Only the month is fixed, so the
+ * page says "December 2026" and nothing more precise until Pam and Marcia
+ * book a date; interest is collected meanwhile (see /api/event-interest).
+ */
+export const NEXT_EVENT = {
+  name: "You Are Not Alone II",
+  whenLabel: "December 2026",
+} as const;
+
+export function eventPath(sub: "" | "/thank-you" | "/feedback" = ""): string {
   return `/events/${EVENT.slug}${sub}`;
 }
 

@@ -6,7 +6,7 @@ import { z } from "zod/v4";
 import { db } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
-import { EVENT, LEAD_COOKIE, eventPath, ticketUrl } from "@/lib/event-config";
+import { EVENT, LEAD_COOKIE, eventPath, hasEnded, ticketUrl } from "@/lib/event-config";
 import { PAY_ITEMS, itemName, priceFor, stripe, type PayItem } from "@/lib/stripe";
 
 /**
@@ -83,7 +83,11 @@ async function ticketSession(
   now: Date,
   ref: string | undefined
 ): Promise<SessionParams | Refusal> {
-  if (!ticketUrl(now)) {
+  // ticketUrl() has been null since the last-chance price closed on the 25th,
+  // which already refuses here. hasEnded() is belt and braces: if a checkout
+  // flag is ever flipped back on for the next event, it still cannot sell a
+  // seat for a day that has already happened.
+  if (hasEnded(now) || !ticketUrl(now)) {
     return { error: `Booking for ${EVENT.name} has closed.`, status: 410 };
   }
 

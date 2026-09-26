@@ -8,7 +8,15 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       // The book's reader pages are for founding readers only (they are also
       // noindex and gated; this just stops well-behaved crawlers knocking).
-      disallow: ["/app/", "/stats/", "/api/", "/book/introduction", "/book/questions"],
+      // The event feedback form is for people who were there (also noindex).
+      disallow: [
+        "/app/",
+        "/stats/",
+        "/api/",
+        "/book/introduction",
+        "/book/questions",
+        "/events/you-are-not-alone/feedback",
+      ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };
