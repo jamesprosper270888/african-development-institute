@@ -9,7 +9,6 @@ import { EnquiryNotification } from "@/lib/email/templates/enquiry-notification"
 import { BookReservationConfirmation } from "@/lib/email/templates/book-reservation-confirmation";
 import { db } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
-import { forwardToGHL } from "@/lib/ghl";
 import { BOOK } from "@/lib/book-config";
 import { BOOK_READER_COOKIE, readerCookieOptions } from "@/lib/book-access";
 
@@ -104,8 +103,6 @@ export async function POST(request: Request) {
         timestamp: new Date().toISOString(),
       }),
     });
-
-    await forwardToGHL({ name, email, source: "book-reservation", message });
   }
 
   await sendEmail({

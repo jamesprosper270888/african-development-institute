@@ -10,7 +10,6 @@ import { EnquiryConfirmation } from "@/lib/email/templates/enquiry-confirmation"
 import { db } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
 import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
-import { forwardToGHL } from "@/lib/ghl";
 
 const enquirySchema = z.object({
   name: z.string().min(1).max(200),
@@ -97,8 +96,6 @@ export async function POST(request: Request) {
       `💬 ${escapeHtml(message.slice(0, 300))}`,
     ].join("\n")
   );
-
-  await forwardToGHL({ name, email, source: type, message });
 
   return NextResponse.json({ success: true });
 }

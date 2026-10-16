@@ -9,7 +9,6 @@ import { EventReserveConfirmation } from "@/lib/email/templates/event-reserve-co
 import { db } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
 import { sendTelegramNotification, escapeHtml } from "@/lib/telegram";
-import { forwardToGHL } from "@/lib/ghl";
 import { sendMetaEvent } from "@/lib/meta-capi";
 import { postbackToPCM } from "@/lib/pcm-postback";
 import {
@@ -212,13 +211,6 @@ export async function POST(request: Request) {
       .filter(Boolean)
       .join("\n")
   );
-
-  await forwardToGHL({
-    name,
-    email,
-    source: isMember ? "event-reserve-member" : "event-reserve-guest",
-    message,
-  });
 
   // Tracking — must never fail the submission
   const txnId = row?.id ?? eventId ?? `${Date.now()}`;
